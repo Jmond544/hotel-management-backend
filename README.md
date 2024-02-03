@@ -1,4 +1,4 @@
-# Diagrama de base de datos
+# DB model
 
 ```mermaid
 
