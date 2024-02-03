@@ -1,5 +1,14 @@
 # DB model
 
+- [ ] RESERVA
+- [X] TIPO_SERVICIO
+- [ ] RESERVA_HABITACION
+- [X] HABITACION
+- [ ] HUESPED
+- [ ] RESERVA_HUESPED
+- [ ] USUARIO_INTERNO
+- [X] ESTADO_PAGO
+
 ```mermaid
 
 erDiagram
@@ -29,10 +38,10 @@ erDiagram
 
     HABITACION {
         STRING id
+        STRING numero_habitacion
         STRING tipo_habitacion
         INTEGER numero_piso
         FLOAT precio
-        STRING url_imagen
         STRING estado
     }
 
