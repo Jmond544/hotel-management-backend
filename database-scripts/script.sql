@@ -33,10 +33,10 @@ CREATE TABLE TIPO_SERVICIO (
 
 CREATE TABLE HABITACION (
     id BINARY(16) PRIMARY KEY DEFAULT (UUID_TO_BIN(UUID())),
+    numero_habitacion VARCHAR(4),
     tipo_habitacion VARCHAR(255),
     numero_piso INTEGER,
     precio FLOAT,
-    url_imagen VARCHAR(255),
     estado VARCHAR(255)
 );
 
@@ -94,3 +94,32 @@ ALTER TABLE
     RESERVA
 ADD
     FOREIGN KEY (id_estado_pago) REFERENCES ESTADO_PAGO(id);
+
+
+-- Insertar datos
+
+--- Estado de pago
+INSERT INTO ESTADO_PAGO (id, estado) VALUES ('Pendiente');
+INSERT INTO ESTADO_PAGO (id, estado) VALUES ('Pagado');
+
+--- Tipo de servicio
+INSERT INTO TIPO_SERVICIO (id, nombre, precio) VALUES ('Basico', 10);
+INSERT INTO TIPO_SERVICIO (id, nombre, precio) VALUES ('Platino', 20);
+INSERT INTO TIPO_SERVICIO (id, nombre, precio) VALUES ('Premium', 30);
+
+--- Habitaciones
+----- Piso 1
+INSERT INTO HABITACION (numero_habitacion, tipo_habitacion, numero_piso, precio, estado) VALUES ("0101","Clásico", 1, 300, 'Disponible');
+INSERT INTO HABITACION (numero_habitacion, tipo_habitacion, numero_piso, precio, estado) VALUES ("0102","Matrimonial", 1, 400, 'Disponible');
+INSERT INTO HABITACION (numero_habitacion, tipo_habitacion, numero_piso, precio, estado) VALUES ("0103","Suit", 1, 500, 'Disponible');
+
+----- Piso 2
+INSERT INTO HABITACION (numero_habitacion, tipo_habitacion, numero_piso, precio, estado) VALUES ("0201","Clásico", 2, 300, 'Disponible');
+INSERT INTO HABITACION (numero_habitacion, tipo_habitacion, numero_piso, precio, estado) VALUES ("0202","Matrimonial", 2, 400, 'Disponible');
+INSERT INTO HABITACION (numero_habitacion, tipo_habitacion, numero_piso, precio, estado) VALUES ("0203","Suit", 2, 500, 'Disponible');
+
+----- Piso 3
+INSERT INTO HABITACION (numero_habitacion, tipo_habitacion, numero_piso, precio, estado) VALUES ("0301","Clásico", 3, 300, 'Disponible');
+INSERT INTO HABITACION (numero_habitacion, tipo_habitacion, numero_piso, precio, estado) VALUES ("0302","Matrimonial", 3, 400, 'Disponible');
+INSERT INTO HABITACION (numero_habitacion, tipo_habitacion, numero_piso, precio, estado) VALUES ("0303","Suit", 3, 500, 'Disponible');
+
