@@ -6,11 +6,14 @@ erDiagram
 
     RESERVA {
         STRING id
-        STRING id_huesped
-        STRING id_tipoServicio
+        STRING id_tipo_servicio
+        STRING id_estado_pago
         DATE fecha_inicio
         DATE fecha_fin
         INTEGER numero_huespedes
+        FLOAT monto_pago
+        STRING mail_pago
+        STRING telefono_pago
     }
 
     TIPO_SERVICIO {
@@ -30,27 +33,21 @@ erDiagram
         INTEGER numero_piso
         FLOAT precio
         STRING url_imagen
+        STRING estado
     }
 
     HUESPED {
-        INTEGER id
+        STRING id
         STRING nombres
         STRING apellidos
+        STRING dni
         STRING telefono
-        STRING dni
-        STRING gmail
+        STRING mail
     }
 
-    INVITADOS {
+    RESERVA_HUESPED {
         STRING id_reserva
-        STRING nombres
-        STRING apellidos
-        STRING dni
-    }
-
-    RESERVA_INVITADOS {
-        STRING id_reserva
-        STRING id_invitado
+        STRING id_huesped
     }
 
     USUARIO_INTERNO {
@@ -66,11 +63,16 @@ erDiagram
         STRING codigo_temporal
     }
 
-    RESERVA_HABITACION ||--|{ RESERVA : contains
+    ESTADO_PAGO {
+        STRING id
+        STRING estado
+    }
+
+    RESERVA_HABITACION }|--|| RESERVA : contains
     TIPO_SERVICIO ||--|| RESERVA : contains
-    RESERVA_HABITACION ||--|{ HABITACION : contains
-    HUESPED ||--|{ RESERVA : realiza
-    RESERVA_INVITADOS ||--|{ INVITADOS : contains
-    RESERVA_INVITADOS ||--|{ RESERVA : contains
+    RESERVA_HABITACION }|--|| HABITACION : contains
+    RESERVA_HUESPED }|--|| HUESPED : contains
+    RESERVA_HUESPED }|--|| RESERVA : contains
+    RESERVA ||--|| ESTADO_PAGO : contains
 
 ```
