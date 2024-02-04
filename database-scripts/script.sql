@@ -102,30 +102,30 @@ ADD
 
 -- Estado de pago
 
-INSERT INTO ESTADO_PAGO (id, estado) VALUES ('Pendiente');
-INSERT INTO ESTADO_PAGO (id, estado) VALUES ('Pagado');
+INSERT INTO ESTADO_PAGO (id, estado) VALUES ('pendiente');
+INSERT INTO ESTADO_PAGO (id, estado) VALUES ('pagado');
 
 -- Tipo de servicio
 
-INSERT INTO TIPO_SERVICIO (id, nombre, precio) VALUES ('Basico', 10);
-INSERT INTO TIPO_SERVICIO (id, nombre, precio) VALUES ('Platino', 20);
-INSERT INTO TIPO_SERVICIO (id, nombre, precio) VALUES ('Premium', 30);
+INSERT INTO TIPO_SERVICIO (id, nombre, precio) VALUES ('basico', 10);
+INSERT INTO TIPO_SERVICIO (id, nombre, precio) VALUES ('platino', 20);
+INSERT INTO TIPO_SERVICIO (id, nombre, precio) VALUES ('premium', 30);
 
 -- Habitaciones
 -- Piso 1
 
-INSERT INTO HABITACION (numero_habitacion, tipo_habitacion, numero_piso, precio, estado) VALUES ("0101","Clasico", 1, 300, 'disponible');
-INSERT INTO HABITACION (numero_habitacion, tipo_habitacion, numero_piso, precio, estado) VALUES ("0102","Matrimonial", 1, 400, 'disponible');
-INSERT INTO HABITACION (numero_habitacion, tipo_habitacion, numero_piso, precio, estado) VALUES ("0103","Suit", 1, 500, 'disponible');
+INSERT INTO HABITACION (numero_habitacion, tipo_habitacion, numero_piso, precio, estado) VALUES ("0101","clasico", 1, 300, 'disponible');
+INSERT INTO HABITACION (numero_habitacion, tipo_habitacion, numero_piso, precio, estado) VALUES ("0102","matrimonial", 1, 400, 'disponible');
+INSERT INTO HABITACION (numero_habitacion, tipo_habitacion, numero_piso, precio, estado) VALUES ("0103","suit", 1, 500, 'disponible');
 
 -- Piso 2
 
-INSERT INTO HABITACION (numero_habitacion, tipo_habitacion, numero_piso, precio, estado) VALUES ("0201","Clasico", 2, 300, 'disponible');
-INSERT INTO HABITACION (numero_habitacion, tipo_habitacion, numero_piso, precio, estado) VALUES ("0202","Matrimonial", 2, 400, 'disponible');
+INSERT INTO HABITACION (numero_habitacion, tipo_habitacion, numero_piso, precio, estado) VALUES ("0201","clasico", 2, 300, 'disponible');
+INSERT INTO HABITACION (numero_habitacion, tipo_habitacion, numero_piso, precio, estado) VALUES ("0202","matrimonial", 2, 400, 'disponible');
 INSERT INTO HABITACION (numero_habitacion, tipo_habitacion, numero_piso, precio, estado) VALUES ("0203","Suit", 2, 500, 'disponible');
 
 -- Piso 3
-INSERT INTO HABITACION (numero_habitacion, tipo_habitacion, numero_piso, precio, estado) VALUES ("0301","Clasico", 3, 300, 'disponible');
-INSERT INTO HABITACION (numero_habitacion, tipo_habitacion, numero_piso, precio, estado) VALUES ("0302","Matrimonial", 3, 400, 'disponible');
-INSERT INTO HABITACION (numero_habitacion, tipo_habitacion, numero_piso, precio, estado) VALUES ("0303","Suit", 3, 500, 'disponible');
+INSERT INTO HABITACION (numero_habitacion, tipo_habitacion, numero_piso, precio, estado) VALUES ("0301","clasico", 3, 300, 'disponible');
+INSERT INTO HABITACION (numero_habitacion, tipo_habitacion, numero_piso, precio, estado) VALUES ("0302","matrimonial", 3, 400, 'disponible');
+INSERT INTO HABITACION (numero_habitacion, tipo_habitacion, numero_piso, precio, estado) VALUES ("0303","suit", 3, 500, 'disponible');
 
