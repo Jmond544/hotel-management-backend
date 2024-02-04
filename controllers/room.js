@@ -13,10 +13,22 @@ export class RoomController {
     }
   }
 
-  static async getAll(req, res) {
+  static async getByQuery(req, res) {
     try {
-      const rooms = await RoomModel.getAll();
-      res.status(200).json(rooms);
+      const { type, number, status } = req.query;
+      if (type) {
+        const room = await RoomModel.getByTypeRoom({ type });
+        res.status(200).json(room);
+      } else if (number) {
+        const room = await RoomModel.getByNumberRoom({ number });
+        res.status(200).json(room[0]);
+      } else if (status) {
+        const room = await RoomModel.getByStatusRoom({ status });
+        res.status(200).json(room);
+      } else {
+        const rooms = await RoomModel.getAll();
+        res.status(200).json(rooms);
+      }
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
@@ -24,9 +36,9 @@ export class RoomController {
 
   static async updateStatus(req, res) {
     try {
-      const { id } = req.params;
+      const { roomNumber } = req.params;
       const { estado } = validateRoomState(req.body);
-      await RoomModel.updateStatus({ status: estado, id });
+      await RoomModel.updateStatus({ status: estado, roomNumber });
       res.status(200).json({ message: "Room status updated" });
     } catch (error) {
       res.status(500).json({ error: error.message });

@@ -1,14 +1,27 @@
 ### Las pruebas de métodos http estarán aquí
 
-## rooms
+### Actualizar el estado de una habitación
 
-POST http://localhost:4000/api/room/3705f146-c334-11ee-93ce-0242ac110002 HTTP/1.1
+POST http://localhost:4000/api/room/0102 HTTP/1.1
 Content-Type: application/json
 
 {
     "estado": "ocupada"
 }
 
-###
+### Obtener todas las habitaciones
 
 GET http://localhost:4000/api/room/ HTTP/1.1
+
+### Obtener habitación por número de habitación
+
+GET http://localhost:4000/api/room?number=0101 HTTP/1.1
+
+### Obtener habitación por tipo de habitación
+
+GET http://localhost:4000/api/room?type=Matrimonial HTTP/1.1
+
+
+### Obtener habitación por estado
+
+GET http://localhost:4000/api/room?status=ocupada HTTP/1.1
