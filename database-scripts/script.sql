@@ -1,4 +1,5 @@
 -- Eliminar las tablas si ya existen
+
 DROP TABLE IF EXISTS RESERVA_HUESPED;
 
 DROP TABLE IF EXISTS RESERVA_HABITACION;
@@ -90,6 +91,7 @@ CREATE TABLE USUARIO_INTERNO (
 
 
 -- Agregar restricción de clave foránea después de crear la tabla ESTADO_PAGO
+
 ALTER TABLE
     RESERVA
 ADD
@@ -98,28 +100,32 @@ ADD
 
 -- Insertar datos
 
---- Estado de pago
+-- Estado de pago
+
 INSERT INTO ESTADO_PAGO (id, estado) VALUES ('Pendiente');
 INSERT INTO ESTADO_PAGO (id, estado) VALUES ('Pagado');
 
---- Tipo de servicio
+-- Tipo de servicio
+
 INSERT INTO TIPO_SERVICIO (id, nombre, precio) VALUES ('Basico', 10);
 INSERT INTO TIPO_SERVICIO (id, nombre, precio) VALUES ('Platino', 20);
 INSERT INTO TIPO_SERVICIO (id, nombre, precio) VALUES ('Premium', 30);
 
---- Habitaciones
------ Piso 1
-INSERT INTO HABITACION (numero_habitacion, tipo_habitacion, numero_piso, precio, estado) VALUES ("0101","Clásico", 1, 300, 'Disponible');
-INSERT INTO HABITACION (numero_habitacion, tipo_habitacion, numero_piso, precio, estado) VALUES ("0102","Matrimonial", 1, 400, 'Disponible');
-INSERT INTO HABITACION (numero_habitacion, tipo_habitacion, numero_piso, precio, estado) VALUES ("0103","Suit", 1, 500, 'Disponible');
+-- Habitaciones
+-- Piso 1
 
------ Piso 2
-INSERT INTO HABITACION (numero_habitacion, tipo_habitacion, numero_piso, precio, estado) VALUES ("0201","Clásico", 2, 300, 'Disponible');
-INSERT INTO HABITACION (numero_habitacion, tipo_habitacion, numero_piso, precio, estado) VALUES ("0202","Matrimonial", 2, 400, 'Disponible');
-INSERT INTO HABITACION (numero_habitacion, tipo_habitacion, numero_piso, precio, estado) VALUES ("0203","Suit", 2, 500, 'Disponible');
+INSERT INTO HABITACION (numero_habitacion, tipo_habitacion, numero_piso, precio, estado) VALUES ("0101","Clasico", 1, 300, 'disponible');
+INSERT INTO HABITACION (numero_habitacion, tipo_habitacion, numero_piso, precio, estado) VALUES ("0102","Matrimonial", 1, 400, 'disponible');
+INSERT INTO HABITACION (numero_habitacion, tipo_habitacion, numero_piso, precio, estado) VALUES ("0103","Suit", 1, 500, 'disponible');
 
------ Piso 3
-INSERT INTO HABITACION (numero_habitacion, tipo_habitacion, numero_piso, precio, estado) VALUES ("0301","Clásico", 3, 300, 'Disponible');
-INSERT INTO HABITACION (numero_habitacion, tipo_habitacion, numero_piso, precio, estado) VALUES ("0302","Matrimonial", 3, 400, 'Disponible');
-INSERT INTO HABITACION (numero_habitacion, tipo_habitacion, numero_piso, precio, estado) VALUES ("0303","Suit", 3, 500, 'Disponible');
+-- Piso 2
+
+INSERT INTO HABITACION (numero_habitacion, tipo_habitacion, numero_piso, precio, estado) VALUES ("0201","Clasico", 2, 300, 'disponible');
+INSERT INTO HABITACION (numero_habitacion, tipo_habitacion, numero_piso, precio, estado) VALUES ("0202","Matrimonial", 2, 400, 'disponible');
+INSERT INTO HABITACION (numero_habitacion, tipo_habitacion, numero_piso, precio, estado) VALUES ("0203","Suit", 2, 500, 'disponible');
+
+-- Piso 3
+INSERT INTO HABITACION (numero_habitacion, tipo_habitacion, numero_piso, precio, estado) VALUES ("0301","Clasico", 3, 300, 'disponible');
+INSERT INTO HABITACION (numero_habitacion, tipo_habitacion, numero_piso, precio, estado) VALUES ("0302","Matrimonial", 3, 400, 'disponible');
+INSERT INTO HABITACION (numero_habitacion, tipo_habitacion, numero_piso, precio, estado) VALUES ("0303","Suit", 3, 500, 'disponible');
 
