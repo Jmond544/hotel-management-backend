@@ -1,20 +1,19 @@
 import { poll } from "./db_connection.js";
-import { Type_Service_Model } from "./type_service.js";
 
-export class ReservationModel {
+export class GuestModel {
   static async getAll() {
     try {
-      const result = await poll.query("SELECT * FROM RESERVA");
+      const result = await poll.query("SELECT * FROM HUESPED");
       return result[0];
     } catch (error) {
       console.log(error);
     }
   }
 
-  static async getById({ id }) {
+  static async getOneById({ id }) {
     try {
       const result = await poll.query(
-        "SELECT * FROM RESERVA WHERE id = UUID_TO_BIN(?)",
+        "SELECT * FROM HUESPED WHERE id = UUID_TO_BIN(?)",
         [id]
       );
       return result[0];
@@ -23,10 +22,20 @@ export class ReservationModel {
     }
   }
 
-  static async create({ service, data }) {
+  static async getOneByDNINumber({ dniNumber }) {
     try {
-      const idService = Type_Service_Model.getByName({ name: service });
-      const result = await poll.query("INSERT INTO RESERVA SET ?", [data]);
+      const result = await poll.query("SELECT * FROM HUESPED WHERE dni = ?", [
+        dniNumber,
+      ]);
+      return result[0];
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  static async create({ data }) {
+    try {
+      const result = await poll.query("INSERT INTO HUESPED SET ?", [data]);
       return result[0];
     } catch (error) {
       console.log(error);
@@ -36,7 +45,7 @@ export class ReservationModel {
   static async update({ data, id }) {
     try {
       const result = await poll.query(
-        "UPDATE RESERVA SET ? WHERE id = UUID_TO_BIN(?)",
+        "UPDATE HUESPED SET ? WHERE id = UUID_TO_BIN(?)",
         [data, id]
       );
       return result[0];
@@ -48,7 +57,7 @@ export class ReservationModel {
   static async delete({ id }) {
     try {
       const result = await poll.query(
-        "DELETE FROM RESERVA WHERE id = UUID_TO_BIN(?)",
+        "DELETE FROM HUESPED WHERE id = UUID_TO_BIN(?)",
         [id]
       );
       return result[0];
