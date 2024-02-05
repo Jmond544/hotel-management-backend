@@ -4,9 +4,9 @@ DROP TABLE IF EXISTS RESERVA_HUESPED;
 
 DROP TABLE IF EXISTS RESERVA_HABITACION;
 
-DROP TABLE IF EXISTS ESTADO_PAGO;
-
 DROP TABLE IF EXISTS RESERVA;
+
+DROP TABLE IF EXISTS ESTADO_PAGO;
 
 DROP TABLE IF EXISTS USUARIO_INTERNO;
 
@@ -56,6 +56,7 @@ CREATE TABLE RESERVA (
     monto_pago FLOAT,
     mail_pago VARCHAR(255),
     telefono_pago VARCHAR(255),
+    fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (id_tipo_servicio) REFERENCES TIPO_SERVICIO(id),
     FOREIGN KEY (id_estado_pago) REFERENCES ESTADO_PAGO(id)
 );
@@ -102,14 +103,14 @@ ADD
 
 -- Estado de pago
 
-INSERT INTO ESTADO_PAGO (id, estado) VALUES ('pendiente');
-INSERT INTO ESTADO_PAGO (id, estado) VALUES ('pagado');
+INSERT INTO ESTADO_PAGO (estado) VALUES ('pendiente');
+INSERT INTO ESTADO_PAGO (estado) VALUES ('pagado');
 
 -- Tipo de servicio
 
-INSERT INTO TIPO_SERVICIO (id, nombre, precio) VALUES ('basico', 10);
-INSERT INTO TIPO_SERVICIO (id, nombre, precio) VALUES ('platino', 20);
-INSERT INTO TIPO_SERVICIO (id, nombre, precio) VALUES ('premium', 30);
+INSERT INTO TIPO_SERVICIO (nombre, precio) VALUES ('basico', 10);
+INSERT INTO TIPO_SERVICIO (nombre, precio) VALUES ('platino', 20);
+INSERT INTO TIPO_SERVICIO (nombre, precio) VALUES ('premium', 30);
 
 -- Habitaciones
 -- Piso 1

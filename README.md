@@ -23,6 +23,7 @@ erDiagram
         FLOAT monto_pago
         STRING mail_pago
         STRING telefono_pago
+        TIME fecha_creacion
     }
 
     TIPO_SERVICIO {
