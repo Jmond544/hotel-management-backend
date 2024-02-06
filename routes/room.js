@@ -4,5 +4,5 @@ import { RoomController } from "../controllers/room.js";
 
 export const roomRouter = Router();
 
-roomRouter.post("/:id", RoomController.updateStatus);
-roomRouter.get("/", RoomController.getAll);
+roomRouter.post("/:roomNumber", RoomController.updateStatus);
+roomRouter.get("/", RoomController.getByQuery);

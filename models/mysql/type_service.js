@@ -13,10 +13,10 @@ export class Type_Service_Model {
     }
   }
 
-  static async getByName({ name }) {
+  static async getIdByName({ name }) {
     try {
       const result = await poll.query(
-        "SELECT * FROM TIPO_SERVICIO WHERE nombre = ?",
+        "SELECT BIN_TO_UUID(id) AS id FROM TIPO_SERVICIO WHERE nombre = ?",
         [name]
       );
       return result[0];

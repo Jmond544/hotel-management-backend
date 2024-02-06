@@ -33,9 +33,23 @@ export class GuestModel {
     }
   }
 
-  static async create({ data }) {
+  static async getIdByDNINumber({ dniNumber }) {
     try {
-      const result = await poll.query("INSERT INTO HUESPED SET ?", [data]);
+      const result = await poll.query("SELECT BIN_TO_UUID(id) FROM HUESPED WHERE dni = ?", [
+        dniNumber,
+      ]);
+      return result[0];
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  static async create({ name, lastName, dni, phone, mail }) {
+    try {
+      const result = await poll.query(
+        "INSERT INTO HUESPED (nombres,apellidos,dni,telefono,mail) VALUES (?,?,?,?,?)",
+        [name, lastName, dni, phone, mail]
+      );
       return result[0];
     } catch (error) {
       console.log(error);
