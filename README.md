@@ -86,3 +86,24 @@ erDiagram
     RESERVA ||--|| ESTADO_PAGO : contains
 
 ```
+## Class Diagram
+
+```mermaid
+classDiagram
+
+reservartion : getAll()
+reservartion : getById({ id }) 
+reservartion : create({ tipoServicio, fechaInicio,fechaFin,mailPago,telefonoPago,habitaciones,huespedes})
+reservartion : update({ data, id })
+reservartion : delete({ id })
+
+Type_Service_Model : getById({ id })
+Type_Service_Model : getIdByName({ name })
+
+GuestModel : getAll()
+GuestModel : getOneById({ id })
+GuestModel : getOneByDNINumber({ dniNumber })
+GuestModel : getIdByDNINumber({ dniNumber })
+GuestModel : create({ name, lastName, dni, phone, mail })
+
+```
