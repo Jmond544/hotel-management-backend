@@ -1,6 +1,6 @@
 # DB model
 
-- [ ] RESERVA
+- [X] RESERVA 
 - [X] TIPO_SERVICIO
 - [ ] RESERVA_HABITACION
 - [X] HABITACION
