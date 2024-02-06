@@ -86,7 +86,8 @@ erDiagram
     RESERVA ||--|| ESTADO_PAGO : contains
 
 ```
-## Class Diagram
+
+## Class Diagram (Use case reservation)
 
 ```mermaid
 classDiagram
