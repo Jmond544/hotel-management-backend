@@ -1,6 +1,10 @@
 import { poll } from "./db_connection.js";
-import { Type_Service_Model } from "./tipo_servicio.js";
-import { GuestModel } from "./huesped.js";
+import { ModeloTipoServicio } from "./tipo_servicio.js";
+import { ModeloHuesped } from "./huesped.js";
+import { ModeloEstadoPago } from "./estado_pago.js";
+import { ModeloReservaHabitacion } from "./reserva_habitacion.js";
+import { ModeloHabitacion } from "./habitacion.js";
+import { ModeloReservaHuesped } from "./reserva_huesped.js";
 
 export class ReservationModel {
   static async getAll() {
@@ -34,35 +38,65 @@ export class ReservationModel {
     huespedes,
   }) {
     try {
-      const idTipoServicio = await Type_Service_Model.getIdByName({
-        name: tipoServicio,
+      // Seccion de validaciones
+
+      const validacionTipoServicio =
+        await ModeloTipoServicio.validarTipoServicio({ tipoServicio });
+
+      const validacionFechas = await ModeloReservaHabitacion.validarFechas({
+        fechaInicio,
+        fechaFin,
       });
-      const idEstadoPago = await poll.query(
-        "SELECT BIN_TO_UUID(id) AS id FROM ESTADO_PAGO WHERE estado = 'pendiente'"
-      );
-      if (!idTipoServicio || !idEstadoPago[0]) {
-        console.log("No se encontró el tipo de servicio o el estado de pago");
+
+      const validacionHabitaciones =
+        ModeloReservaHabitacion.validarHabitaciones({
+          listaNumeroHabitaciones: habitaciones,
+        });
+
+      if (!validacionTipoServicio) {
+        console.log("El tipo de servicio no es válido");
+        return null;
+      }
+      if (!validacionFechas) {
+        console.log("Las fechas no son válidas");
+        return null;
+      }
+      if (!validacionHabitaciones) {
+        console.log("Las habitaciones no son válidas");
         return null;
       }
 
+      // Obtencion de IDs
+
+      const idTipoServicio = await ModeloTipoServicio.getIdByName({
+        name: tipoServicio,
+      });
+
+      const idEstadoPago = await ModeloEstadoPago.getIdByStatus({
+        status: "pendiente",
+      });
+
       const dateInicio = new Date(fechaInicio);
       const dateFin = new Date(fechaFin);
-      const daysReservation =
-        Math.abs(dateFin - dateInicio) / (1000 * 60 * 60 * 24);
-      // TODO: Calcular el monto de pago
-      const pago = daysReservation * 1000;
+
+      const pagoTotal = await this.calcularMontoPago({
+        fechaInicio: dateInicio,
+        fechaFin: dateFin,
+        tipoServicio,
+        listaHabitaciones: habitaciones,
+      });
 
       const numeroHuespedes = habitaciones.length;
 
       const result = await poll.query(
         "INSERT INTO RESERVA (id_tipo_servicio, id_estado_pago, fecha_inicio, fecha_fin, numero_huespedes, monto_pago, mail_pago, telefono_pago) VALUES (UUID_TO_BIN(?), UUID_TO_BIN(?), ?, ?, ?, ?, ?, ?)",
         [
-          idTipoServicio[0].id,
-          idEstadoPago[0][0].id,
+          idTipoServicio,
+          idEstadoPago,
           dateInicio,
           dateFin,
           numeroHuespedes,
-          pago,
+          pagoTotal,
           mailPago,
           telefonoPago,
         ]
@@ -73,22 +107,22 @@ export class ReservationModel {
         "SELECT BIN_TO_UUID(id) AS id FROM RESERVA ORDER BY fecha_creacion DESC LIMIT 1"
       );
 
-
       // Insertar las habitaciones reservadas
       for (let i = 0; i < habitaciones.length; i++) {
-        const idHabitacion = await poll.query(
-          "SELECT BIN_TO_UUID(id) AS id FROM HABITACION WHERE numero_habitacion = ?",
-          [habitaciones[i]["numero"]]
-        );
-        const result_habitacion_reserva = await poll.query(
-          "INSERT INTO RESERVA_HABITACION (id_reserva, id_habitacion) VALUES (UUID_TO_BIN(?), UUID_TO_BIN(?))",
-          [idReserva[0][0].id, idHabitacion[0][0].id]
-        );
+        const idHabitacion =
+          await ModeloHabitacion.obtenerIdPorNumeroHabitacion({
+            numeroHabitacion: habitaciones[i].numero,
+          });
+        const result_habitacion_reserva =
+          await ModeloReservaHabitacion.crearRelacion({
+            idReserva: idReserva[0][0].id,
+            idHabitacion,
+          });
       }
 
       // Insertar los huespedes
       for (let i = 0; i < huespedes.length; i++) {
-        const result_huesped = await GuestModel.create({
+        const result_huesped = await ModeloHuesped.create({
           name: huespedes[i].nombre,
           lastName: huespedes[i].apellido,
           dni: huespedes[i].dni,
@@ -96,13 +130,14 @@ export class ReservationModel {
           mail: huespedes[i].mail,
         });
 
-        const idHuesped = await poll.query(
-          "SELECT BIN_TO_UUID(id) AS id FROM HUESPED WHERE dni = ?",
-          [huespedes[i].dni]
-        );
-        const result_huesped_reserva = await poll.query(
-          "INSERT INTO RESERVA_HUESPED (id_reserva, id_huesped) VALUES (UUID_TO_BIN(?), UUID_TO_BIN(?))",
-          [idReserva[0][0].id, idHuesped[0][0].id]
+        const idHuesped = await ModeloHuesped.getIdByDNINumber({
+          dniNumber: huespedes[i].dni,
+        });
+        const result_huesped_reserva = await ModeloReservaHuesped.crearRelacion(
+          {
+            idReserva: idReserva[0][0].id,
+            idHuesped,
+          }
         );
       }
 
@@ -110,6 +145,27 @@ export class ReservationModel {
     } catch (error) {
       console.log(error);
     }
+  }
+
+  static async calcularMontoPago({
+    fechaInicio,
+    fechaFin,
+    tipoServicio,
+    listaHabitaciones,
+  }) {
+    const daysReservation =
+      Math.abs(fechaInicio - fechaFin) / (1000 * 60 * 60 * 24);
+    const listaNumeroHabitaciones = listaHabitaciones.map(
+      (habitacion) => habitacion.numero
+    );
+    const costoHabitaciones =
+      await ModeloHabitacion.obtenerPrecioTotalHabitaciones({
+        listaNumeroHabitaciones,
+      });
+    const costoServicio = await ModeloTipoServicio.obtenerPrecio({
+      tipoServicio: tipoServicio,
+    });
+    return daysReservation * (costoHabitaciones + costoServicio);
   }
 
   static async update({ data, id }) {

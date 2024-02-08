@@ -31,7 +31,8 @@ export class ReservationController {
         habitaciones,
         huespedes,
       } = req.body;
-      await ReservationModel.create({
+
+      const resultCreate = await ReservationModel.create({
         tipoServicio,
         fechaInicio,
         fechaFin,
@@ -40,7 +41,12 @@ export class ReservationController {
         habitaciones,
         huespedes,
       });
-      res.status(200).json({ message: "Reservation created" });
+
+      if (!resultCreate) {
+        res.status(400).json({ message: "Reservation not created" });
+      } else {
+        res.status(200).json({ message: "Reservation created" });
+      }
     } catch (error) {
       res.status(500).json({ error: error.message });
     }

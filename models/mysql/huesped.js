@@ -1,6 +1,6 @@
 import { poll } from "./db_connection.js";
 
-export class GuestModel {
+export class ModeloHuesped {
   static async getAll() {
     try {
       const result = await poll.query("SELECT * FROM HUESPED");
@@ -35,10 +35,10 @@ export class GuestModel {
 
   static async getIdByDNINumber({ dniNumber }) {
     try {
-      const result = await poll.query("SELECT BIN_TO_UUID(id) FROM HUESPED WHERE dni = ?", [
+      const result = await poll.query("SELECT BIN_TO_UUID(id) AS id FROM HUESPED WHERE dni = ?", [
         dniNumber,
       ]);
-      return result[0];
+      return result[0][0].id;
     } catch (error) {
       console.log(error);
     }
