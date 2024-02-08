@@ -122,7 +122,7 @@ export class ReservationModel {
 
       // Insertar los huespedes
       for (let i = 0; i < huespedes.length; i++) {
-        const result_huesped = await ModeloHuesped.create({
+        const idHuesped = await ModeloHuesped.create({
           name: huespedes[i].nombre,
           lastName: huespedes[i].apellido,
           dni: huespedes[i].dni,
@@ -130,9 +130,6 @@ export class ReservationModel {
           mail: huespedes[i].mail,
         });
 
-        const idHuesped = await ModeloHuesped.getIdByDNINumber({
-          dniNumber: huespedes[i].dni,
-        });
         const result_huesped_reserva = await ModeloReservaHuesped.crearRelacion(
           {
             idReserva: idReserva[0][0].id,
