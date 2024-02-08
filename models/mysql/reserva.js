@@ -1,6 +1,6 @@
 import { poll } from "./db_connection.js";
-import { Type_Service_Model } from "./type_service.js";
-import { GuestModel } from "./guest.js";
+import { Type_Service_Model } from "./tipo_servicio.js";
+import { GuestModel } from "./huesped.js";
 
 export class ReservationModel {
   static async getAll() {

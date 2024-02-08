@@ -1,4 +1,4 @@
-import { ReservationModel } from "../models/mysql/reservation.js";
+import { ReservationModel } from "../models/mysql/reserva.js";
 
 export class ReservationController {
   static async getAll(req, res) {

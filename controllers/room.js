@@ -1,4 +1,4 @@
-import { RoomModel } from "../models/mysql/room.js";
+import { RoomModel } from "../models/mysql/habitacion.js";
 
 import { validateRoomState } from "../schemas/room.js";
 
