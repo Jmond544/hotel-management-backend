@@ -107,4 +107,17 @@ export class ModeloHabitacion {
       console.log(error);
     }
   }
+
+  static async validarFechasHabitacion ({ idHabitacion, fechaInicio, fechaFin }) {
+    try {
+      const resultado = await poll.query(
+        "SELECT * FROM RESERVA_HABITACION WHERE id_habitacion = UUID_TO_BIN(?) AND id_reserva IN (SELECT id FROM RESERVA WHERE fecha_inicio < ? AND fecha_fin > ?)",
+        [idHabitacion, fechaFin, fechaInicio]
+      );
+
+      return resultado[0].length === 0;
+    } catch (error) {
+      console.log(error);
+    }
+  }
 }
