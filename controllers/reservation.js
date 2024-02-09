@@ -59,8 +59,8 @@ export class ReservationController {
         huespedes,
       });
 
-      if (!resultCreate) {
-        res.status(400).json({ message: "Reservation not created" });
+      if (!resultCreate.result) {
+        res.status(400).json({ message: resultCreate.message });
       } else {
         res.status(200).json({ message: "Reservation created" });
       }
