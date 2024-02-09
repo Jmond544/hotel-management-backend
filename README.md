@@ -109,42 +109,11 @@ GuestModel : create({ name, lastName, dni, phone, mail })
 
 ```
 
-## Entidades del modelo
 
-```
-modelo_reserva:
-    getAll()
-    getById({ id }) 
-    create({ tipoServicio, fechaInicio,fechaFin,mailPago,telefonoPago,habitaciones,huespedes})
-    update({ data, id })
-    delete({ id })
 
-modelo_habitacion:
-    getByNumberRoom({ number })
-    getByTypeRoom({ type })
-    getByStatusRoom({ status })
-    updateStatus({ status, roomNumber})
+# Descripción de los directorios y archivos
 
-modelo_reserva_habitacion:
-    createUnion({ reservationId, roomId })
-    deleteUnion({ reservationId, roomId })
 
-modelo_reservation_huesped:
-    createUnion({ reservationId, huespedId })
-    deleteUnion({ reservationId, huespedId })
+## Entidades del modelo (models)
 
-modelo_huesped:
-    getAll()
-    getOneById({ id })
-    getOneByDNINumber({ dniNumber })
-    getIdByDNINumber({ dniNumber })
-    create({ name, lastName, dni, phone, mail })
-
-modelo_tipo_servicio:
-    getById({ id })
-    getIdByName({ name })
-
-modelo_estado_pago:
-    getById({ id })
-    getIdByName({ name })
-```
+## Controladores

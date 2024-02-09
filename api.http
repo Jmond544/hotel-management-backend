@@ -34,16 +34,16 @@ Content-Type: application/json
 
 {
     "tipoServicio": "basico",
-    "fechaInicio": "2020-11-05",
-    "fechaFin": "2020-11-30",
+    "fechaInicio": "2020-12-15",
+    "fechaFin": "2020-12-20",
     "mailPago": "example@example.com",
     "telefonoPago": "999999999",
     "habitaciones": [
         {
-            "numero": "0101"
+            "numero": "0201"
         },
         {
-            "numero": "0102"
+            "numero": "0202"
         },
         {
             "numero": "0103"
@@ -55,21 +55,21 @@ Content-Type: application/json
             "apellido": "Perez",
             "dni": "12345678",
             "telefono": "999999999",
-            "mail": ""
+            "mail": "a@gmail.com"
         },
         {
             "nombre": "Juan",
             "apellido": "Perez",
             "dni": "23409823",
             "telefono": "999999999",
-            "mail": ""
+            "mail": "b@gmail.com"
         },
         {
             "nombre": "Juan",
             "apellido": "Perez",
             "dni": "12309834",
             "telefono": "999999999",
-            "mail": ""
+            "mail": "c@gmail.com"
         }
     ]
 }

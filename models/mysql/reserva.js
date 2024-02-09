@@ -44,6 +44,7 @@ export class ReservationModel {
         await ModeloTipoServicio.validarTipoServicio({ tipoServicio });
 
       const validacionFechas = await ModeloReservaHabitacion.validarFechas({
+        listaHabitaciones: habitaciones,
         fechaInicio,
         fechaFin,
       });
