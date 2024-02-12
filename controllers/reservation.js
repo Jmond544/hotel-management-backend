@@ -1,4 +1,3 @@
-import e from "cors";
 import { ReservationModel } from "../models/mysql/reserva.js";
 import { validateReservation } from "../schemas/reserva.js";
 
@@ -33,7 +32,20 @@ export class ReservationController {
         habitaciones,
         huespedes,
       } = req.body;
-      
+
+      if (
+        !tipoServicio ||
+        !fechaInicio ||
+        !fechaFin ||
+        !mailPago ||
+        !telefonoPago ||
+        habitaciones.length <= 0 ||
+        huespedes.length <= 0
+      ) {
+        res.status(400).json({ message: "Invalid fields" });
+        return;
+      }
+
       const { statusOperation } = ReservationController.verificarCampos({
         data: {
           tipoServicio,
@@ -83,4 +95,20 @@ export class ReservationController {
     }
   }
 
+  static async obtenerPrecio({
+    fechaInicio,
+    fechaFin,
+    tipoServicio,
+    listaHabitaciones,
+  }) {
+    fechaFin = new Date(fechaFin);
+    fechaInicio = new Date(fechaInicio);
+    const response = await ReservationModel.calcularMontoPago({
+      fechaInicio,
+      fechaFin,
+      tipoServicio,
+      listaHabitaciones,
+    });
+    return response;
+  }
 }

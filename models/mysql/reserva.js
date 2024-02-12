@@ -159,6 +159,7 @@ export class ReservationModel {
     tipoServicio,
     listaHabitaciones,
   }) {
+
     const daysReservation =
       Math.abs(fechaInicio - fechaFin) / (1000 * 60 * 60 * 24);
     const listaNumeroHabitaciones = listaHabitaciones.map(
