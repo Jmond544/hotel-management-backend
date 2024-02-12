@@ -190,44 +190,157 @@ Por último, el método updateStatus se encarga de actualizar el estado de una h
 * En caso de error, responde con un mensaje de error y un código de estado HTTP 500.
 
 
-*
-*
-*
-*
 
 
 
-# Room
+# paymentController
 
-## namemethod
-txt
+## createOrder
 
 
 
 ```js
    
+  static async createOrder(req, res) {
+    try {
+      const data = req.body;
+      const {statusOperation} = ReservationController.verificarCampos({ data });
+      if (!statusOperation) {
+        res.status(400).json({ message: "Invalid fields" });
+        return;
+      }
+      const monto = await ReservationController.obtenerPrecio({
+        fechaFin: data.fechaFin,
+        fechaInicio: data.fechaInicio,
+        listaHabitaciones: data.habitaciones,
+        tipoServicio: data.tipoServicio,
+      });
+
+      const montoString = monto.toString();
+      const order = {
+        intent: "CAPTURE",
+        purchase_units: [
+          {
+            amount: {
+              currency_code: "USD",
+              value: montoString,
+            },
+          },
+        ],
+        payment_source: {
+          paypal: {
+            experience_context: {
+              brand_name: "my company.com",
+              landing_page: "NO_PREFERENCE",
+              user_action: "PAY_NOW",
+              return_url: `${HOST}/api/payment/capture-order`,
+              cancel_url: `${HOST}/api/payment/cancel-order`,
+            },
+          },
+        },
+      };
+
+      const params = new URLSearchParams();
+      params.append("grant_type", "client_credentials");
+
+      const {
+        data: { access_token },
+      } = await axios.post(`${PAYPAL_API}/v1/oauth2/token`, params, {
+        auth: {
+          username: PAYPAL_API_CLIENT,
+          password: PAYPAL_API_SECRET,
+        },
+      });
+
+      // make a request
+      const response = await axios.post(
+        `${PAYPAL_API}/v2/checkout/orders`,
+        order,
+        {
+          headers: {
+            Authorization: `Bearer ${access_token}`,
+          },
+        }
+      );
+
+      res.status(200).json(response.data);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
    
 ```
-*
-*
-*
-*
+* Este método estático se utiliza para crear una orden de pago utilizando la API de PayPal. Toma los datos del cuerpo de la solicitud (req.body) que se espera contengan información sobre la reserva, y realiza las siguientes acciones:
+Verifica los campos de la reserva llamando al método ReservationController.verificarCampos.
+* Obtiene el monto total de la reserva llamando al método ReservationController.obtenerPrecio.
+* Construye un objeto de orden de pago (order) con la información necesaria.
+* Realiza una solicitud para obtener un token de acceso a la API de PayPal.
+* Realiza una solicitud para crear una orden de pago utilizando el token de acceso obtenido.
+* Devuelve la respuesta de PayPal en formato JSON.
 
 
 
 
-# Room
+## captureOrder
 
-## namemethod
-txt
 
 
 
 ```js
    
+  static async captureOrder(req, res) {
+    try {
+      const { token } = req.query;
+
+      const response = await axios.post(
+        `${PAYPAL_API}/v2/checkout/orders/${token}/capture`,
+        {},
+        {
+          auth: {
+            username: PAYPAL_API_CLIENT,
+            password: PAYPAL_API_SECRET,
+          },
+        }
+      );
+
+      console.log(response);
+
+      res.status(200).json({ message: "Payed" });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
    
 ```
-*
-*
-*
-*
+
+* Este método estático se utiliza para capturar (confirmar) una orden de pago previamente creada. Toma el token de la orden de pago como parámetro de consulta (req.query.token) y realiza una solicitud a la API de PayPal para capturar la orden.
+* Imprime la respuesta en la consola (podría ser útil para el seguimiento y la depuración).
+* Devuelve un mensaje JSON indicando que el pago ha sido realizado.
+
+
+
+
+
+
+
+
+
+
+
+## cancelOrder
+
+```js
+
+  static async cancelOrder(req, res) {
+    try {
+      res.status(200).json({ message: "Payment canceled" });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+
+
+```
+
+* Este método estático se utiliza para cancelar una orden de pago. Simplemente devuelve un mensaje indicando que el pago ha sido cancelado.
+* No realiza ninguna acción específica en la API de PayPal para la cancelación.
