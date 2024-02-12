@@ -187,6 +187,8 @@ export class ReservationModel {
     }
   }
 
+  
+
   static async delete({ id }) {
     try {
       const result = await poll.query(
@@ -199,3 +201,4 @@ export class ReservationModel {
     }
   }
 }
+

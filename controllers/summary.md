@@ -370,3 +370,33 @@ ervation: data });
 * Convierte las fechas de inicio y fin a objetos de fecha.
 * Utiliza el modelo ReservationModel para calcular el monto de pago llamando a la función calcularMontoPago con los parámetros proporcionados.
 * Retorna la respuesta obtenida del cálculo del monto de pago.
+
+
+
+## obtenerPrecio (fechaInicio, fechaFin, tipoServicio, listaHabitaciones)
+
+El método obtenerPrecio es una función asíncrona que calcula el monto de pago para una reserva en función de la fecha de inicio, fecha de fin, tipo de servicio y lista de habitaciones. Convierte las fechas de inicio y fin a objetos de fecha para su procesamiento. Utiliza el modelo ReservationModel para realizar el cálculo del monto de pago mediante la función calcularMontoPago.  Retorna la respuesta obtenida del cálculo d
+el monto de pago mediante la función calcularMontoPago.  Retorna la respuesta obtenida del cálculo del monto de pago.
+
+
+```js
+      static async obtenerPrecio({
+    fechaInicio,
+    fechaFin,
+    tipoServicio,
+    listaHabitaciones,
+  }) {
+    fechaFin = new Date(fechaFin);
+    fechaInicio = new Date(fechaInicio);
+    const response = await ReservationModel.calcularMontoPago({
+      fechaInicio,
+      fechaFin,
+      tipoServicio,
+      listaHabitaciones,
+    });
+    return response;
+  }
+```
+* Convierte las fechas de inicio y fin a objetos de fecha mediante la creación de instancias de la clase Date.
+* Utiliza el modelo ReservationModel para calcular el monto de pago llamando a la función calcularMontoPago con los parámetros proporcionados.
+* Retorna la respuesta obtenida del cálculo del monto de pago.
