@@ -512,23 +512,31 @@ Este método se encarga de crear una relación entre una reserva y una habitaci�
   }
    
 ```
-*
-*
-*
-*
+
 
 
 ## validarFechas
 
-Este método está incompleto (//TODO), pero su objetivo aparente es validar que el intervalo de fechas proporcionado para una reserva en una habitación no se superponga con las fechas de otras reservas. En este momento, el método siempre devuelve true sin realizar la validación. Se espera que este método sea implementado en el futuro.
-
-
 
 ```js
-     static async validarFechas({ idHabitacion, fechaInicio, fechaFin }) {
+     static async validarFechas({ listaHabitaciones, fechaInicio, fechaFin }) {
     //TODO: Validar que el intervalo de las fechas no se superponga con las fechas de otras reservas
     try {
-
+      const listaNumeroHabitaciones = listaHabitaciones.map(
+        (habitacion) => habitacion.numero
+      );
+      for (let i = 0; i < listaNumeroHabitaciones.length; i++) {
+        const resultado = await ModeloHabitacion.validarFechasHabitacion({
+          idHabitacion: await ModeloHabitacion.obtenerIdPorNumeroHabitacion({
+            numeroHabitacion: listaNumeroHabitaciones[i],
+          }),
+          fechaInicio,
+          fechaFin,
+        });
+        if (!resultado) {
+          return false;
+        }
+      }
       return true;
     } catch (error) {
       console.log(error);
@@ -536,20 +544,19 @@ Este método está incompleto (//TODO), pero su objetivo aparente es validar que
   }
    
 ```
-*
-*
-*
-*
+
+*   Este método estático se utiliza para validar si las fechas de reserva especificadas se superponen con las fechas de otras reservas existentes en las habitaciones proporcionadas.
+*   Itera sobre la lista de habitaciones proporcionadas y verifica si alguna de ellas tiene fechas de reserva superpuestas utilizando métodos de validación de fechas de la clase ModeloHabitacion.
+*   Retorna true si no hay superposiciones y false si se detecta alguna superposición.
+*   Maneja los errores con un bloque try-catch.
 
 
 
 ## validarHabitaciones
-txt
-
-
 
 ```js
 
+  
   static async validarHabitaciones({ listaNumeroHabitaciones }) {
     try {
       for (let i = 0; i < listaNumeroHabitaciones.length; i++) {
@@ -565,154 +572,585 @@ txt
       console.log(error);
     }
   }
+```
+*   Este método estático se utiliza para validar si las habitaciones especificadas en la lista existen en la base de datos.
+*   Itera sobre la lista de números de habitaciones proporcionados y verifica si cada número de habitación existe utilizando métodos de validación de números de habitaciones de la clase ModeloHabitacion.
+*   Retorna true si todas las habitaciones existen y false si alguna de ellas no existe.
+*   Maneja los errores con un bloque try-catch.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# reserva_huesped
+
+## reserva_huesped
+Este método se encarga de crear una relación entre una reserva y un huésped en la base de datos.
+Toma un objeto como argumento con las propiedades idReserva e idHuesped.
+Utiliza la función poll.query para realizar una consulta a la base de datos. La consulta SQL inserta un nuevo registro en la tabla RESERVA_HUESPED con los valores proporcionados.
+Los valores idReserva e idHuesped se convierten a formato binario utilizando UUID_TO_BIN, que sugiere que se están utilizando UUIDs en la base de datos.
+Retorna el resultado de la consulta, que parece ser la respuesta de la base de datos después de la inserción.
+
+
+
+```js
+ static async crearRelacion({ idReserva, idHuesped }) {
+    try {
+      const resultado = await poll.query(
+        "INSERT INTO RESERVA_HUESPED (id_reserva, id_huesped) VALUES (UUID_TO_BIN(?), UUID_TO_BIN(?))",
+        [idReserva, idHuesped]
+      );
+      return resultado[0];
+    } catch (error) {
+      console.log(error);
+    }
+  }
    
 ```
-*
-*
-*
-*
+
+*   Construcción de la consulta SQL para insertar un nuevo registro en la tabla RESERVA_HUESPED.
+*   Conversión de los valores idReserva e idHuesped a formato binario utilizando UUID_TO_BIN.
+*   Ejecución de la consulta en la base de datos mediante la función poll.query.
+Proporciona los valores de idReserva e idHuesped como parámetros para la consulta.
+*   Utiliza un bloque try-catch para capturar cualquier error que ocurra durante la ejecución.
+*   Imprime el error en la consola mediante console.log(error) en caso de un problema.
+Retorna el resultado de la consulta ejecutada en la base de datos.
+*   El resultado puede contener información relevante proporcionada por la base de datos después de la inserción.
 
 
-## validarFechas
-txt
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# tipo_servicio
+
+
+## getById
+```js
+static async getById({ id }) {
+    try {
+      const result = await poll.query(
+        "SELECT * FROM TIPO_SERVICIO WHERE id = UUID_TO_BIN(?)",
+        [id]
+      );
+      return result[0];
+    } catch (error) {
+      console.log(error);
+    }
+  }
+   
+```
+
+*   Obtiene un tipo de servicio por su ID.
+*   Utiliza una consulta SQL para seleccionar todos los campos de la tabla TIPO_SERVICIO donde el ID coincida con el proporcionado.
+*   Convierte el ID a formato binario utilizando UUID_TO_BIN.
+*   Retorna el resultado de la consulta, que probablemente sea un objeto representando el tipo de servicio.
+
+
+
+## getIdByName
+
+```js
+
+  static async getIdByName({ name }) {
+    try {
+      const result = await poll.query(
+        "SELECT BIN_TO_UUID(id) AS id FROM TIPO_SERVICIO WHERE nombre = ?",
+        [name]
+      );
+      return result[0][0].id;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+   
+```
+*   Obtiene el ID de un tipo de servicio por su nombre.
+*   Utiliza una consulta SQL para seleccionar el ID (convertido a formato UUID) de la tabla TIPO_SERVICIO donde el nombre coincida con el proporcionado.
+*   Retorna el ID resultante.
+
+
+
+## validarTipoServicio
+
+
+
+
+```js
+
+  static async validarTipoServicio({ tipoServicio }) {
+    try {
+      const result = await poll.query(
+        "SELECT * FROM TIPO_SERVICIO WHERE nombre = ?",
+        [tipoServicio]
+      );
+      return result[0].length > 0;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+   
+```
+*   Valida la existencia de un tipo de servicio por su nombre.
+*   Utiliza una consulta SQL para seleccionar todos los campos de la tabla TIPO_SERVICIO donde el nombre coincida con el proporcionado.
+*   Retorna un valor booleano indicando si se encontraron tipos de servicio con ese nombre.
+
+
+
+## obtenerPrecio
+
 
 
 
 ```js
 
    
+  static async obtenerPrecio({ tipoServicio }) {
+    try {
+      const result = await poll.query(
+        "SELECT precio FROM TIPO_SERVICIO WHERE nombre = ?",
+        [tipoServicio]
+      );
+      return result[0][0].precio;
+    } catch (error) {
+      console.log(error);
+    }
+  }
 ```
-*
-*
-*
-*
+*   Obtiene el precio de un tipo de servicio por su nombre.
+*   Utiliza una consulta SQL para seleccionar el precio de la tabla TIPO_SERVICIO donde el nombre coincida con el proporcionado.
+*   Retorna el precio resultante.
 
 
 
-## validarFechas
-txt
+
+
+# Reserva
+
+
+## getAll
+
+
+
+
+```js
+static async getAll() {
+    try {
+      const result = await poll.query("SELECT * FROM RESERVA");
+      return result[0];
+    } catch (error) {
+      console.log(error);
+    }
+  }
+   
+```
+*   Obtiene todas las reservas en la base de datos.
+*   Utiliza una consulta SQL simple para seleccionar todos los campos de la tabla RESERVA.
+*   Retorna el resultado de la consulta.
+
+
+
+## getById
+
+
+
+
+```js
+ static async getById({ id }) {
+    try {
+      const result = await poll.query(
+        "SELECT * FROM RESERVA WHERE id = UUID_TO_BIN(?)",
+        [id]
+      );
+      return result[0];
+    } catch (error) {
+      console.log(error);
+    }
+  }
+   
+```
+
+*   Obtiene una reserva por su ID.
+*   Utiliza una consulta SQL para seleccionar todos los campos de la tabla RESERVA donde el ID coincida con el proporcionado.
+*   Convierte el ID a formato binario utilizando UUID_TO_BIN.
+*   Retorna el resultado de la consulta.
+
+
+
+## create
+
 
 
 
 ```js
 
    
+  static async create({
+    tipoServicio,
+    fechaInicio,
+    fechaFin,
+    mailPago,
+    telefonoPago,
+    habitaciones,
+    huespedes,
+  }) {
+    try {
+      // Seccion de validaciones
+
+      const validacionTipoServicio =
+        await ModeloTipoServicio.validarTipoServicio({ tipoServicio });
+
+      const validacionFechas = await ModeloReservaHabitacion.validarFechas({
+        listaHabitaciones: habitaciones,
+        fechaInicio,
+        fechaFin,
+      });
+
+      const validacionHabitaciones =
+        ModeloReservaHabitacion.validarHabitaciones({
+          listaNumeroHabitaciones: habitaciones,
+        });
+
+      if (!validacionTipoServicio) {
+        console.log("El tipo de servicio no es válido.");
+        return { result: null, message: "El tipo de servicio no es válido." };
+      }
+      if (!validacionFechas) {
+        console.log("Las fechas no son válidas");
+        return {
+          result: null,
+          message: "Las fechas no son válidas, ya están reservadas.",
+        };
+      }
+      if (!validacionHabitaciones) {
+        return {
+          result: null,
+          message: "Las habitaciones no son válidas.",
+        };
+      }
+
+      // Obtencion de IDs
+
+      const idTipoServicio = await ModeloTipoServicio.getIdByName({
+        name: tipoServicio,
+      });
+
+      const idEstadoPago = await ModeloEstadoPago.getIdByStatus({
+        status: "pendiente",
+      });
+
+      const dateInicio = new Date(fechaInicio);
+      const dateFin = new Date(fechaFin);
+
+      const pagoTotal = await this.calcularMontoPago({
+        fechaInicio: dateInicio,
+        fechaFin: dateFin,
+        tipoServicio,
+        listaHabitaciones: habitaciones,
+      });
+
+      const numeroHuespedes = habitaciones.length;
+
+      const result = await poll.query(
+        "INSERT INTO RESERVA (id_tipo_servicio, id_estado_pago, fecha_inicio, fecha_fin, numero_huespedes, monto_pago, mail_pago, telefono_pago) VALUES (UUID_TO_BIN(?), UUID_TO_BIN(?), ?, ?, ?, ?, ?, ?)",
+        [
+          idTipoServicio,
+          idEstadoPago,
+          dateInicio,
+          dateFin,
+          numeroHuespedes,
+          pagoTotal,
+          mailPago,
+          telefonoPago,
+        ]
+      );
+
+      // Recuperar el id de la reserva
+      const idReserva = await poll.query(
+        "SELECT BIN_TO_UUID(id) AS id FROM RESERVA ORDER BY fecha_creacion DESC LIMIT 1"
+      );
+
+      // Insertar las habitaciones reservadas
+      for (let i = 0; i < habitaciones.length; i++) {
+        const idHabitacion =
+          await ModeloHabitacion.obtenerIdPorNumeroHabitacion({
+            numeroHabitacion: habitaciones[i].numero,
+          });
+        const result_habitacion_reserva =
+          await ModeloReservaHabitacion.crearRelacion({
+            idReserva: idReserva[0][0].id,
+            idHabitacion,
+          });
+      }
+
+      // Insertar los huespedes
+      for (let i = 0; i < huespedes.length; i++) {
+        const idHuesped = await ModeloHuesped.create({
+          name: huespedes[i].nombre,
+          lastName: huespedes[i].apellido,
+          dni: huespedes[i].dni,
+          phone: huespedes[i].telefono,
+          mail: huespedes[i].mail,
+        });
+
+        const result_huesped_reserva = await ModeloReservaHuesped.crearRelacion(
+          {
+            idReserva: idReserva[0][0].id,
+            idHuesped,
+          }
+        );
+      }
+
+      return {
+        result: result[0],
+        message: "Se ha registrado la reserva.",
+      };
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
 ```
-*
-*
-*
-*
+
+*   Crea una nueva reserva en la base de datos.
+*   Realiza validaciones utilizando métodos de otros modelos (ModeloTipoServicio, 
+*   ModeloReservaHabitacion, ModeloHabitacion, ModeloHuesped) antes de la inserción.
+*   Obtiene IDs necesarios para la reserva (tipo de servicio, estado de pago, etc.).
+*   Calcula el monto total de pago mediante el método calcularMontoPago.
+*   Realiza la inserción en la tabla RESERVA.
+*   Inserta las relaciones entre la reserva, habitaciones y huéspedes en las tablas correspondientes.
+*   Retorna un objeto con el resultado de la inserción y un mensaje indicando el éxito.
 
 
 
-## validarFechas
-txt
+## calcularMontoPago
+
 
 
 
 ```js
 
+  static async calcularMontoPago({
+    fechaInicio,
+    fechaFin,
+    tipoServicio,
+    listaHabitaciones,
+  }) {
+
+    const daysReservation =
+      Math.abs(fechaInicio - fechaFin) / (1000 * 60 * 60 * 24);
+    const listaNumeroHabitaciones = listaHabitaciones.map(
+      (habitacion) => habitacion.numero
+    );
+    const costoHabitaciones =
+      await ModeloHabitacion.obtenerPrecioTotalHabitaciones({
+        listaNumeroHabitaciones,
+      });
+    const costoServicio = await ModeloTipoServicio.obtenerPrecio({
+      tipoServicio: tipoServicio,
+    });
+    return daysReservation * (costoHabitaciones + costoServicio);
+  }
+
    
 ```
-*
-*
-*
-*
+
+*   Calcula el monto total de pago para una reserva en función de la duración de la estadía, el tipo de servicio y el costo de las habitaciones.
+*   Utiliza métodos de otros modelos (ModeloHabitacion, ModeloTipoServicio) para obtener información necesaria.
 
 
 
-## validarFechas
-txt
+## update
+
 
 
 
 ```js
 
+  
+  static async update({ data, id }) {
+    try {
+      const result = await poll.query(
+        "UPDATE RESERVA SET ? WHERE id = UUID_TO_BIN(?)",
+        [data, id]
+      );
+      return result[0];
+    } catch (error) {
+      console.log(error);
+    }
+  }
    
 ```
-*
-*
-*
-*
+*   Actualiza una reserva existente en la base de datos por su ID.
+*   Utiliza una consulta SQL para realizar la actualización.
+*   Retorna el resultado de la actualización.
 
 
+## delete
 
-## validarFechas
-txt
 
 
 
 ```js
 
+  static async delete({ id }) {
+    try {
+      const result = await poll.query(
+        "DELETE FROM RESERVA WHERE id = UUID_TO_BIN(?)",
+        [id]
+      );
+      return result[0];
+    } catch (error) {
+      console.log(error);
+    }
+  }
    
 ```
-*
-*
-*
-*
+
+
+*   Elimina una reserva de la base de datos por su ID.
+*   Utiliza una consulta SQL para realizar la eliminación.
+*   Retorna el resultado de la eliminación.
 
 
 
-## validarFechas
-txt
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## 
+
 
 
 
 ```js
 
+  
    
 ```
-*
-*
-*
-*
 
 
 
-## validarFechas
-txt
+
+
+## 
+
 
 
 
 ```js
 
+  
    
 ```
-*
-*
-*
-*
 
 
 
 
-## validarFechas
-txt
+
+## 
+
 
 
 
 ```js
 
+  
    
 ```
-*
-*
-*
-*
 
 
 
 
-## validarFechas
-txt
+## 
+
 
 
 
 ```js
 
+  
    
 ```
-*
-*
-*
-*
+
+
+
+## 
+
+
+
+
+```js
+
+  
+   
+```
