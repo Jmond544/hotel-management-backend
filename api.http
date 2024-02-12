@@ -73,3 +73,31 @@ Content-Type: application/json
         }
     ]
 }
+
+### PAYMENT
+
+POST http://localhost:4000/api/payment/create-order HTTP/1.1
+Content-Type: application/json
+
+{
+  "mailPago": "jmondalgotapia@gmail.com",
+  "telefonoPago": "953923333",
+  "tipoServicio": "basico",
+  "fechaInicio": "2024-04-02",
+  "fechaFin": "2024-04-06",
+  "habitaciones": [
+    { "numero": "0301" },
+    { "numero": "0302" },
+    { "numero": "0303" },
+    { "numero": "0103" }
+  ],
+  "huespedes": [
+    {
+      "nombre": "Jesus Emanuel",
+      "apellido": "Mitma Vera",
+      "dni": "12312312",
+      "telefono": "123123123",
+      "mail": "qweqwe@qweqew.qwe"
+    }
+  ]
+}
