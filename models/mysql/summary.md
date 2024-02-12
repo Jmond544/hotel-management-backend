@@ -4,7 +4,7 @@
 
 
 
-# estado_pago
+# db_connection
 
 
 ## createPool
@@ -23,9 +23,10 @@ Establece una conexión a la base de datos MySQL mediante un pool de conexiones,
   database: DB_NAME,
 });
 
+```
+
 *    Este método pertenece a la biblioteca mysql2/promise y se utiliza para crear un pool de conexiones a la base de datos MySQL. Un pool de conexiones ayuda a mejorar el rendimiento y la eficiencia al reutilizar conexiones existentes en lugar de establecer nuevas conexiones cada vez que se realiza una consulta.
 
-```
 * poll:
 
 Es un objeto que representa el pool de conexiones creado con createPool.
@@ -172,9 +173,31 @@ Este método obtiene detalles de las habitaciones según el estado proporcionado
 *   Utiliza una consulta SQL con un parámetro para filtrar por estado de la habitación.
 *   Retorna un arreglo con la información de las habitaciones o maneja el error imprimiéndolo en la consola.
 
+## updateStatus
+
+Este método se encarga de actualizar el estado de una habitación en la base de datos. Toma dos parámetros:
+
+status: El nuevo estado que se asignará a la habitación.
+roomNumber: El número de la habitación que se actualizará.
+
+```js
+
+  static async updateStatus({ status, roomNumber }) {
+    try {
+      const result = await poll.query(
+        "UPDATE HABITACION SET estado = ? WHERE numero_habitacion = ?",
+        [status, roomNumber]
+      );
+      return result[0];
+    } catch (error) {
+      console.log(error);
+    }
+  }
+```
 
 
-# Room
+
+
 
 ## obtenerIdPorNumeroHabitacion
 
@@ -264,7 +287,34 @@ El método obtenerPrecioTotalHabitaciones calcula y retorna el precio total de u
 ```
 
 
+## validarFechasHabitacion
 
+
+validarFechasHabitacion: Este método se encarga de validar si una habitación está disponible durante un rango de fechas específico. Toma tres parámetros:
+
+idHabitacion: El identificador único de la habitación que se va a validar.
+fechaInicio: La fecha de inicio del rango para el cual se desea verificar la disponibilidad.
+fechaFin: La fecha de fin del rango para el cual se desea verificar la disponibilidad.
+
+
+poll.query: Similar al caso anterior, este método parece ser una función de acceso a la base de datos que realiza una consulta SQL. En este caso, la consulta selecciona todas las reservas de habitación donde el id_habitacion coincide con el proporcionado y donde la id_reserva está en el rango de fechas especificado.
+
+UUID_TO_BIN(?): Parece ser una función que convierte un UUID a su representación binaria.
+```js
+
+  static async validarFechasHabitacion ({ idHabitacion, fechaInicio, fechaFin }) {
+    try {
+      const resultado = await poll.query(
+        "SELECT * FROM RESERVA_HABITACION WHERE id_habitacion = UUID_TO_BIN(?) AND id_reserva IN (SELECT id FROM RESERVA WHERE fecha_inicio < ? AND fecha_fin > ?)",
+        [idHabitacion, fechaFin, fechaInicio]
+      );
+
+      return resultado[0].length === 0;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+```
 
 # Huesped
 
@@ -596,7 +646,7 @@ Este método se encarga de crear una relación entre una reserva y una habitaci�
 
 # reserva_huesped
 
-## reserva_huesped
+## crearRelacion
 Este método se encarga de crear una relación entre una reserva y un huésped en la base de datos.
 Toma un objeto como argumento con las propiedades idReserva e idHuesped.
 Utiliza la función poll.query para realizar una consulta a la base de datos. La consulta SQL inserta un nuevo registro en la tabla RESERVA_HUESPED con los valores proporcionados.
