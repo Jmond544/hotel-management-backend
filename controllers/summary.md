@@ -344,3 +344,29 @@ Verifica los campos de la reserva llamando al método ReservationController.veri
 
 * Este método estático se utiliza para cancelar una orden de pago. Simplemente devuelve un mensaje indicando que el pago ha sido cancelado.
 * No realiza ninguna acción específica en la API de PayPal para la cancelación.
+
+
+
+## verificarCampos({ data })
+
+El método verificarCampos se encarga de validar los campos de una reserva utilizando la función validateReservation. Si la validación es exitosa, devuelve un objeto con statusOperation establecido en true y la reserva validada. En caso de error durante la validación, devuelve un objeto con statusOperation establecido en false y un mensaje de error estructurado.
+
+```js
+   static verificarCampos({ data }) {
+    try {
+      const reservation = validateReservation({ res
+ervation: data });
+      return { statusOperation: true, reservation };
+    } catch (error) {
+      const message = error.errors.map((error) => {
+        return { message: error.message, path: error.path };
+      });
+      console.log(message);
+      return { statusOperation: false, message };
+    }
+  }   
+```
+
+* Convierte las fechas de inicio y fin a objetos de fecha.
+* Utiliza el modelo ReservationModel para calcular el monto de pago llamando a la función calcularMontoPago con los parámetros proporcionados.
+* Retorna la respuesta obtenida del cálculo del monto de pago.
