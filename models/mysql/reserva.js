@@ -44,6 +44,7 @@ export class ReservationModel {
         await ModeloTipoServicio.validarTipoServicio({ tipoServicio });
 
       const validacionFechas = await ModeloReservaHabitacion.validarFechas({
+        listaHabitaciones: habitaciones,
         fechaInicio,
         fechaFin,
       });
@@ -54,16 +55,21 @@ export class ReservationModel {
         });
 
       if (!validacionTipoServicio) {
-        console.log("El tipo de servicio no es válido");
-        return null;
+        console.log("El tipo de servicio no es válido.");
+        return { result: null, message: "El tipo de servicio no es válido." };
       }
       if (!validacionFechas) {
         console.log("Las fechas no son válidas");
-        return null;
+        return {
+          result: null,
+          message: "Las fechas no son válidas, ya están reservadas.",
+        };
       }
       if (!validacionHabitaciones) {
-        console.log("Las habitaciones no son válidas");
-        return null;
+        return {
+          result: null,
+          message: "Las habitaciones no son válidas.",
+        };
       }
 
       // Obtencion de IDs
@@ -138,7 +144,10 @@ export class ReservationModel {
         );
       }
 
-      return result[0];
+      return {
+        result: result[0],
+        message: "Se ha registrado la reserva.",
+      };
     } catch (error) {
       console.log(error);
     }
@@ -150,6 +159,7 @@ export class ReservationModel {
     tipoServicio,
     listaHabitaciones,
   }) {
+
     const daysReservation =
       Math.abs(fechaInicio - fechaFin) / (1000 * 60 * 60 * 24);
     const listaNumeroHabitaciones = listaHabitaciones.map(

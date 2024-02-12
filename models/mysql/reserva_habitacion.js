@@ -27,10 +27,24 @@ static async obtenerPrecioTotalHabitaciones({ idReserva }) {
   }
   */
 
-  static async validarFechas({ idHabitacion, fechaInicio, fechaFin }) {
+  static async validarFechas({ listaHabitaciones, fechaInicio, fechaFin }) {
     //TODO: Validar que el intervalo de las fechas no se superponga con las fechas de otras reservas
     try {
-
+      const listaNumeroHabitaciones = listaHabitaciones.map(
+        (habitacion) => habitacion.numero
+      );
+      for (let i = 0; i < listaNumeroHabitaciones.length; i++) {
+        const resultado = await ModeloHabitacion.validarFechasHabitacion({
+          idHabitacion: await ModeloHabitacion.obtenerIdPorNumeroHabitacion({
+            numeroHabitacion: listaNumeroHabitaciones[i],
+          }),
+          fechaInicio,
+          fechaFin,
+        });
+        if (!resultado) {
+          return false;
+        }
+      }
       return true;
     } catch (error) {
       console.log(error);

@@ -1,8 +1,9 @@
 import express, { json } from "express";
 import cors from "cors";
 import { DOMAIN_ACEPTED, PORT } from "./config.js";
-import { roomRouter } from "./routes/room.js";
-import { reservationRouter } from "./routes/reservation.js";
+import { roomRouter } from "./routes/room.routes.js";
+import { reservationRouter } from "./routes/reservation.routes.js";
+import { paymentRouter } from "./routes/payment.routes.js";
 
 const app = express();
 
@@ -17,6 +18,7 @@ app.disable("x-powered-by");
 
 app.use("/api/room", roomRouter);
 app.use("/api/reservation", reservationRouter);
+app.use("/api/payment", paymentRouter);
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

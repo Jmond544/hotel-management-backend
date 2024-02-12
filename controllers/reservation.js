@@ -1,4 +1,5 @@
 import { ReservationModel } from "../models/mysql/reserva.js";
+import { validateReservation } from "../schemas/reserva.js";
 
 export class ReservationController {
   static async getAll(req, res) {
@@ -32,6 +33,34 @@ export class ReservationController {
         huespedes,
       } = req.body;
 
+      if (
+        !tipoServicio ||
+        !fechaInicio ||
+        !fechaFin ||
+        !mailPago ||
+        !telefonoPago ||
+        habitaciones.length <= 0 ||
+        huespedes.length <= 0
+      ) {
+        res.status(400).json({ message: "Invalid fields" });
+        return;
+      }
+
+      const { statusOperation } = ReservationController.verificarCampos({
+        data: {
+          tipoServicio,
+          fechaInicio,
+          fechaFin,
+          mailPago,
+          telefonoPago,
+          habitaciones,
+          huespedes,
+        },
+      });
+      if (!statusOperation) {
+        res.status(400).json({ message: "Invalid fields" });
+        return;
+      }
       const resultCreate = await ReservationModel.create({
         tipoServicio,
         fechaInicio,
@@ -42,13 +71,44 @@ export class ReservationController {
         huespedes,
       });
 
-      if (!resultCreate) {
-        res.status(400).json({ message: "Reservation not created" });
+      if (!resultCreate.result) {
+        res.status(400).json({ message: resultCreate.message });
       } else {
         res.status(200).json({ message: "Reservation created" });
       }
     } catch (error) {
+      console.log(error);
       res.status(500).json({ error: error.message });
     }
+  }
+
+  static verificarCampos({ data }) {
+    try {
+      const reservation = validateReservation({ reservation: data });
+      return { statusOperation: true, reservation };
+    } catch (error) {
+      const message = error.errors.map((error) => {
+        return { message: error.message, path: error.path };
+      });
+      console.log(message);
+      return { statusOperation: false, message };
+    }
+  }
+
+  static async obtenerPrecio({
+    fechaInicio,
+    fechaFin,
+    tipoServicio,
+    listaHabitaciones,
+  }) {
+    fechaFin = new Date(fechaFin);
+    fechaInicio = new Date(fechaInicio);
+    const response = await ReservationModel.calcularMontoPago({
+      fechaInicio,
+      fechaFin,
+      tipoServicio,
+      listaHabitaciones,
+    });
+    return response;
   }
 }
