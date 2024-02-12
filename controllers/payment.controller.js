@@ -11,9 +11,11 @@ export class PaymentController {
   static async createOrder(req, res) {
     try {
       const data = req.body;
-      const {statusOperation} = ReservationController.verificarCampos({ data });
+      const { statusOperation, message } = await ReservationController.verificarCampos({
+        data,
+      });
       if (!statusOperation) {
-        res.status(400).json({ message: "Invalid fields" });
+        res.status(400).json({ message: message });
         return;
       }
       const monto = await ReservationController.obtenerPrecio({
@@ -40,7 +42,7 @@ export class PaymentController {
               brand_name: "my company.com",
               landing_page: "NO_PREFERENCE",
               user_action: "PAY_NOW",
-              return_url: `${HOST}/api/payment/capture-order`,
+              return_url: data.currentUrl,
               cancel_url: `${HOST}/api/payment/cancel-order`,
             },
           },
@@ -94,6 +96,7 @@ export class PaymentController {
       console.log(response);
 
       res.status(200).json({ message: "Payed" });
+      
     } catch (error) {
       res.status(500).json({ error: error.message });
     }

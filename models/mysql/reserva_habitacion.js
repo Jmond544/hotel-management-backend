@@ -28,7 +28,6 @@ static async obtenerPrecioTotalHabitaciones({ idReserva }) {
   */
 
   static async validarFechas({ listaHabitaciones, fechaInicio, fechaFin }) {
-    //TODO: Validar que el intervalo de las fechas no se superponga con las fechas de otras reservas
     try {
       const listaNumeroHabitaciones = listaHabitaciones.map(
         (habitacion) => habitacion.numero
