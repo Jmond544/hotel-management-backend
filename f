@@ -1,0 +1,197 @@
+[33mcommit b6c77b8a4f3d3897cb4a0c919b3c2678ab09851d[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m)[m
+Merge: 996b294 2721aeb
+Author: Juan Carlos Mondalgo <90876139+Jmond544@users.noreply.github.com>
+Date:   Thu Feb 8 11:37:13 2024 -0500
+
+    Merge pull request #6 from Jmond544/change_names
+    
+    Adding validations on the models
+
+[33mcommit 2721aeb68475069775655b278cde7fdbd9633150[m
+Author: Jmond544 <jmondalgotapia@gmail.com>
+Date:   Thu Feb 8 11:34:11 2024 -0500
+
+    Refactor Huesped and Reservation models
+
+[33mcommit b22a81c91feba341c670fd89f04a96412ed9ab27[m
+Author: Jmond544 <jmondalgotapia@gmail.com>
+Date:   Thu Feb 8 01:38:18 2024 -0500
+
+    Implement model classes and controller methods
+
+[33mcommit 8f02e04bf147cb1bb367c17def5f33fc5c4febb3[m
+Author: Jmond544 <jmondalgotapia@gmail.com>
+Date:   Wed Feb 7 19:21:20 2024 -0500
+
+    Update import statements and model names
+
+[33mcommit 996b294864f7e428ccabd45e17cfad02304fe24c[m
+Merge: 71dad5b b59d9b9
+Author: Jose Francisco Gutierrez Mudarra <137839729+FrancisGM@users.noreply.github.com>
+Date:   Tue Feb 6 00:41:02 2024 -0500
+
+    Merge pull request #5 from Jmond544/feature-models
+    
+    Update README.md with class diagram for use case reservation
+
+[33mcommit b59d9b9f9c2b2fc4d755dfa34d3020f888dbb7cf[m
+Author: Jmond544 <jmondalgotapia@gmail.com>
+Date:   Tue Feb 6 00:37:48 2024 -0500
+
+    Update README.md with class diagram for use case reservation
+
+[33mcommit 71dad5b9f1a110f09c33ad1f7b56bb662d49c53a[m
+Merge: bbe3313 1d79ddd
+Author: Juan Carlos Mondalgo <90876139+Jmond544@users.noreply.github.com>
+Date:   Mon Feb 5 23:08:31 2024 -0500
+
+    Merge pull request #4 from Jmond544/feature-models
+    
+    Add class diagram to README.md
+
+[33mcommit 1d79ddd7a93c43929eb9123734337f5fc3acdb8a[m
+Author: Jmond544 <jmondalgotapia@gmail.com>
+Date:   Mon Feb 5 23:07:34 2024 -0500
+
+    Add class diagram to README.md
+
+[33mcommit bbe3313f72c10a332e77051fd5a7ef7726e5c5a1[m
+Merge: 0bff43a 7eeeadb
+Author: Juan Carlos Mondalgo <90876139+Jmond544@users.noreply.github.com>
+Date:   Mon Feb 5 23:05:03 2024 -0500
+
+    Merge pull request #3 from Jmond544/feature-models
+    
+    Feature models
+
+[33mcommit 7eeeadb4febe81ed3826ef70d49b20ae0af60853[m[33m ([m[1;31morigin/feature-models[m[33m)[m
+Author: Jmond544 <jmondalgotapia@gmail.com>
+Date:   Mon Feb 5 00:58:35 2024 -0500
+
+    Add reservation routes and controllers preliminar
+
+[33mcommit 9c30f83403fa2437807c69d211a152c5a42c4218[m
+Author: Jmond544 <jmondalgotapia@gmail.com>
+Date:   Mon Feb 5 00:58:17 2024 -0500
+
+    Add fecha_creacion column to RESERVA table and update database scripts
+
+[33mcommit 94d235936048f00c89b3393a36581cd82496d71a[m
+Author: Jmond544 <jmondalgotapia@gmail.com>
+Date:   Sun Feb 4 18:16:39 2024 -0500
+
+    Remove commented out code in room.js
+
+[33mcommit 2ed8c3cbcbdc00bbf627ac34a277b0a4e665e5ac[m
+Author: Jmond544 <jmondalgotapia@gmail.com>
+Date:   Sun Feb 4 18:12:46 2024 -0500
+
+    Update room API endpoints and controller methods
+
+[33mcommit 9fec0d5096d84d0d423e8909dc4b583b77be870a[m
+Author: Jmond544 <jmondalgotapia@gmail.com>
+Date:   Sun Feb 4 18:12:34 2024 -0500
+
+    Update database script with lowercase values for estado_pago and tipo_servicio
+
+[33mcommit 0bff43a70985cb7efc082300fc5b31e2e4f8d18e[m
+Merge: 2fb058f 49a1e20
+Author: Juan Carlos Mondalgo <90876139+Jmond544@users.noreply.github.com>
+Date:   Sun Feb 4 03:36:39 2024 -0500
+
+    Merge pull request #2 from Jmond544/feature-models
+    
+    Feature models
+
+[33mcommit 49a1e20c6ddbaddb2ec00dda15f93803800857d4[m
+Author: Jmond544 <jmondalgotapia@gmail.com>
+Date:   Sun Feb 4 03:35:27 2024 -0500
+
+    Add guest, reservation, and type_service models
+
+[33mcommit 3160d6f65e8b6395d87536c7fe555273c050302f[m
+Author: Jmond544 <jmondalgotapia@gmail.com>
+Date:   Sun Feb 4 03:31:34 2024 -0500
+
+    Add room model, controller and routes
+
+[33mcommit 7e3cef30ed73a8866ee60518c0a19acd645e42a0[m
+Author: Jmond544 <jmondalgotapia@gmail.com>
+Date:   Sat Feb 3 16:33:44 2024 -0500
+
+    Add zod package as a dependency
+
+[33mcommit 2fb058f3cdbab00964207bef4906f819c5995809[m
+Merge: 735ef9f 9948a89
+Author: Juan Carlos Mondalgo <90876139+Jmond544@users.noreply.github.com>
+Date:   Sat Feb 3 15:54:45 2024 -0500
+
+    Merge pull request #1 from Jmond544/feature-models
+    
+    Feature models
+
+[33mcommit 9948a899dc12a316d3e791a77260fce4de6166e6[m
+Author: Jmond544 <jmondalgotapia@gmail.com>
+Date:   Sat Feb 3 15:52:10 2024 -0500
+
+    Update DB_NAME in config.js
+
+[33mcommit 088dcc7df598afc6f279e4d53db7e25910f995ad[m
+Author: Jmond544 <jmondalgotapia@gmail.com>
+Date:   Sat Feb 3 15:51:59 2024 -0500
+
+    Modifying database schema and data
+
+[33mcommit 735ef9fd48b8fd709838c1db145753b2e8e489c3[m
+Author: Jmond544 <jmondalgotapia@gmail.com>
+Date:   Sat Feb 3 03:37:17 2024 -0500
+
+    Add ReservationModel to handle CRUD operations
+
+[33mcommit e65af53505d21f8bb96dcea544181754dc0f9b10[m
+Author: Jmond544 <jmondalgotapia@gmail.com>
+Date:   Sat Feb 3 03:35:23 2024 -0500
+
+    Add API configuration and server setup
+
+[33mcommit 68993529c4e0aa593a66081e00c1d5b59101c68d[m
+Author: Jmond544 <jmondalgotapia@gmail.com>
+Date:   Sat Feb 3 03:35:09 2024 -0500
+
+    Update package.json with additional dependencies and scripts
+
+[33mcommit 5a0a91c56f016787d113de221f00ab549ec2e8dd[m
+Author: Jmond544 <jmondalgotapia@gmail.com>
+Date:   Sat Feb 3 03:35:00 2024 -0500
+
+    Add MySQL database connection configuration
+
+[33mcommit be007b3f3220304b6d3fd3589f815ba1e8cb3999[m
+Author: Jmond544 <jmondalgotapia@gmail.com>
+Date:   Sat Feb 3 02:45:36 2024 -0500
+
+    Add initial database schema
+
+[33mcommit d7f1f706e020e730d8cc52375373aa7573e0f0f8[m
+Author: Jmond544 <jmondalgotapia@gmail.com>
+Date:   Sat Feb 3 02:08:11 2024 -0500
+
+    Update RESERVA schema in README.md
+
+[33mcommit 9c2d6269e977bd742b7b34c022e0bf748d1cf49d[m
+Author: Jmond544 <jmondalgotapia@gmail.com>
+Date:   Fri Feb 2 21:18:55 2024 -0500
+
+    Update README.md and add package.json
+
+[33mcommit e4f9a3bd66a03506606bfa9b1a1e92b37d0ed5e2[m
+Author: Jmond544 <jmondalgotapia@gmail.com>
+Date:   Fri Feb 2 21:18:48 2024 -0500
+
+    Add .gitignore file to ignore node_modules and package-lock.json
+
+[33mcommit d51a66e7cc7844d001ac0da2ac5db44e75f6fb25[m
+Author: Jmond544 <jmondalgotapia@gmail.com>
+Date:   Fri Feb 2 21:18:33 2024 -0500
+
+    Adding DB model
