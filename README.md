@@ -68,9 +68,10 @@ erDiagram
         STRING dni
         STRING url_imagen
         STRING telefono
-        STRING gmail
+        STRING mail
         STRING password
         STRING codigo_temporal
+        DATE fecha_creacion_codigo
     }
 
     ESTADO_PAGO {

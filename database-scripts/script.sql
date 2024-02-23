@@ -85,9 +85,10 @@ CREATE TABLE USUARIO_INTERNO (
     dni VARCHAR(255),
     url_imagen VARCHAR(255),
     telefono VARCHAR(255),
-    gmail VARCHAR(255),
+    mail VARCHAR(255),
     password VARCHAR(255),
-    codigo_temporal VARCHAR(255)
+    codigo_temporal VARCHAR(255),
+    fecha_creacion_codigo TIMESTAMP
 );
 
 
