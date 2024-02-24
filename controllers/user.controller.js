@@ -3,6 +3,8 @@ import md5 from "md5";
 import { RESEND_API_SECRET } from "../config.js";
 import { Resend } from "resend";
 import cryptoRandomString from "crypto-random-string";
+import jwt from "jsonwebtoken";
+import { SECRET_KEY } from "../config.js";
 
 const resend = new Resend(RESEND_API_SECRET);
 
@@ -10,14 +12,21 @@ export class UserController {
   static async login(req, res) {
     try {
       const { mail, password } = req.body;
+
+      if (!mail || !password) {
+        res.status(400).json({ error: "Faltan datos" });
+        return;
+      }
+
       const password_cifrado = md5(password);
       const user = await ModeloUsuarioInterno.obtenerUsuario({
         mail,
         password: password_cifrado,
       });
       if (!user) {
-        res.status(401).json({ error: "Usuario o contraseña invalidos" });
-        return;
+        return res
+          .status(401)
+          .json({ error: "Usuario o contraseña invalidos" });
       }
       // Token de verificación
 
@@ -57,8 +66,15 @@ export class UserController {
 
   static async verifyCode(req, res) {
     try {
-      const { mail, codigo } = req.body;
-      const user = await ModeloUsuarioInterno.obtenerCodigoTemporal({ mail });
+      const { mail, codigo, password } = req.body;
+      if (!mail || !codigo || !password) {
+        return res.status(400).json({ error: "Faltan datos" });
+      }
+      const password_c = md5(password);
+      const user = await ModeloUsuarioInterno.obtenerCodigoTemporal({
+        mail,
+        password: password_c,
+      });
 
       if (!user) {
         return res.status(404).json({ error: "Usuario no encontrado" });
@@ -72,11 +88,17 @@ export class UserController {
       const fecha_actual = new Date();
       const diferencia = fecha_actual - fecha_creacion_codigo;
       const diferencia_minutos = Math.floor(diferencia / 60000);
-      if (diferencia_minutos > 1) {
+      if (diferencia_minutos > 2) {
         return res.status(401).json({ error: "El código ha expirado" });
       }
 
-      res.status(200).json({ message: "Usuario verificado" });
+      const token = jwt.sign({ id: user.id }, SECRET_KEY, {
+        expiresIn: 60 * 60 * 24,
+      });
+
+      res
+        .status(200)
+        .json({ auth: true, token, message: "Usuario verificado" });
     } catch (error) {
       res.status(500).json({ error: error.message });
     }

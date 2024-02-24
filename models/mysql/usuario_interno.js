@@ -25,10 +25,10 @@ export class ModeloUsuarioInterno {
     return resultado[0];
   }
 
-  static async obtenerCodigoTemporal({ mail }) {
+  static async obtenerCodigoTemporal({ mail, password }) {
     const resultado = await poll.query(
-      "SELECT codigo_temporal, fecha_creacion_codigo FROM USUARIO_INTERNO WHERE mail = ?",
-      [mail]
+      "SELECT id, codigo_temporal, fecha_creacion_codigo FROM USUARIO_INTERNO WHERE mail = ? AND password = ?",
+      [mail, password]
     );
     return resultado[0][0];
   }
