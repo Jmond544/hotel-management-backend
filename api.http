@@ -136,6 +136,11 @@ Content-Type: application/json
 
 {
     "mail": "jmondalgotapia@gmail.com",
-    "codigo": "WM4K15",
+    "codigo": "52EU0T",
     "password": "recep123"
 }
+
+### Get user by access token
+
+GET http://localhost:4000/api/user/profile/ HTTP/1.1
+X-Access-Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNlNGFkYzQ5LWQyMGMtMTFlZS04MzQxLThjMTY0NTAxOTZmOSIsImlhdCI6MTcwODg0MjM1NywiZXhwIjoxNzA4OTI4NzU3fQ.TKgtzyGJDNd1pbL4KPiXg-ZFEVbstkYV46C3uYU0Jos

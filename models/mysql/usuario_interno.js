@@ -1,6 +1,14 @@
 import { poll } from "./db_connection.js";
 
 export class ModeloUsuarioInterno {
+  static async obtenerUsuarioPorId({ id }) {
+      const resultado = await poll.query(
+        "SELECT rol, nombres, apellidos, dni, url_imagen, telefono, mail FROM USUARIO_INTERNO WHERE id = UUID_TO_BIN(?)",
+        [id]
+      );
+      return resultado[0][0];
+  }
+
   static async obtenerUsuario({ mail, password }) {
     try {
       const resultado = await poll.query(
@@ -27,7 +35,7 @@ export class ModeloUsuarioInterno {
 
   static async obtenerCodigoTemporal({ mail, password }) {
     const resultado = await poll.query(
-      "SELECT id, codigo_temporal, fecha_creacion_codigo FROM USUARIO_INTERNO WHERE mail = ? AND password = ?",
+      "SELECT BIN_TO_UUID(id) AS id, codigo_temporal, fecha_creacion_codigo FROM USUARIO_INTERNO WHERE mail = ? AND password = ?",
       [mail, password]
     );
     return resultado[0][0];

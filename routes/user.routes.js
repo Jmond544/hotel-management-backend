@@ -7,3 +7,4 @@ export const userRouter = Router();
 userRouter.post("/login", UserController.login);
 userRouter.post("/register", UserController.register);
 userRouter.post("/verify", UserController.verifyCode);
+userRouter.get("/profile", verifyToken, UserController.profile);
