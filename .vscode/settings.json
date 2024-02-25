@@ -18,5 +18,18 @@
         "titleBar.inactiveBackground": "#3d948499",
         "titleBar.inactiveForeground": "#e7e7e799"
     },
-    "peacock.color": "#3d9484"
+    "peacock.color": "#3d9484",
+    "sqltools.connections": [
+        {
+            "mysqlOptions": {
+                "authProtocol": "default",
+                "enableSsl": "Disabled"
+            },
+            "previewLimit": 50,
+            "server": "localhost",
+            "driver": "MySQL",
+            "name": "Hotel",
+            "connectString": "mysql://root:gAFaDF45g5gh6D42ggAFA4dGdHcbd4eg@viaduct.proxy.rlwy.net:23380/railway"
+        }
+    ]
 }
