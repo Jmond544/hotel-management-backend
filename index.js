@@ -1,5 +1,6 @@
 import express, { json } from "express";
 import cors from "cors";
+import { DOMAIN_ACEPTED, PORT } from "./config.js";
 import { roomRouter } from "./routes/room.routes.js";
 import { reservationRouter } from "./routes/reservation.routes.js";
 import { paymentRouter } from "./routes/payment.routes.js";
