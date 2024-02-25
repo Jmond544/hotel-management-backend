@@ -47,7 +47,7 @@ export class ReservationController {
         return;
       }
 
-      const { statusOperation } = ReservationController.verificarCampos({
+      const { statusOperation } = await ReservationController.verificarCampos({
         data: {
           tipoServicio,
           fechaInicio,
@@ -58,6 +58,8 @@ export class ReservationController {
           huespedes,
         },
       });
+
+      console.log(statusOperation);
       if (!statusOperation) {
         res.status(400).json({ message: "Invalid fields" });
         return;
@@ -83,39 +85,26 @@ export class ReservationController {
     }
   }
 
-  static async verificarCampos ({ data }) {
+  static async verificarCampos({ data }) {
     try {
-      if (
-        !data.tipoServicio ||
-        !data.fechaInicio ||
-        !data.fechaFin ||
-        !data.mailPago ||
-        !data.telefonoPago ||
-        data.habitaciones.length <= 0 ||
-        data.huespedes.length <= 0
-      ) {
-        return { statusOperation: false, message: "Invalid fields" };
-      }
-      
-      
       const validacionFechas = await ModeloReservaHabitacion.validarFechas({
         fechaFin: data.fechaFin,
         fechaInicio: data.fechaInicio,
         listaHabitaciones: data.habitaciones,
-      })
-      
-      console.log(validacionFechas)
+      });
       if (!validacionFechas) {
-        return { statusOperation: false, message: "Fechas invalidas, ya hay una reserva en ese intervalo." };
+        return {
+          statusOperation: false,
+          message: "Fechas invalidas, ya hay una reserva en ese intervalo.",
+        };
       }
-      
+
       const reservation = validateReservation({ reservation: data });
       return { statusOperation: true, reservation };
     } catch (error) {
       const message = error.errors.map((error) => {
         return { message: error.message, path: error.path };
       });
-      console.log(message);
       return { statusOperation: false, message };
     }
   }

@@ -93,8 +93,6 @@ export class PaymentController {
         }
       );
 
-      console.log(response);
-
       res.status(200).json({ message: "Payed" });
       
     } catch (error) {
