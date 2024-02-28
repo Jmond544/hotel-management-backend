@@ -85,6 +85,25 @@ export class ReservationController {
     }
   }
 
+  static async queryReserva(req, res) {
+    try {
+      const { tipoFiltro, valor, fechaInicio, fechaFin } = req.query;
+      if (!tipoFiltro || !valor || !fechaInicio || !fechaFin) {
+        res.status(400).json({ message: "Invalid fields" });
+        return;
+      }
+      const reservations = await ReservationModel.queryReserva({
+        tipoFiltro,
+        valor,
+        fechaInicio,
+        fechaFin,
+      });
+      res.status(200).json(reservations);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+
   static async verificarCampos({ data }) {
     try {
       const validacionFechas = await ModeloReservaHabitacion.validarFechas({

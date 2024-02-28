@@ -80,6 +80,7 @@ POST http://localhost:4000/api/payment/create-order HTTP/1.1
 Content-Type: application/json
 
 {
+  "currentUrl": "http://localhost:3000",
   "mailPago": "jmondalgotapia@gmail.com",
   "telefonoPago": "953923333",
   "tipoServicio": "basico",
@@ -160,3 +161,16 @@ Content-Type: application/json
 
 GET http://localhost:4000/api/user/profile/ HTTP/1.1
 X-Access-Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjUyNjdhZTliLWQ0MTQtMTFlZS04ODA3LThjMTY0NTAxOTZmOSIsImlhdCI6MTcwODg4OTUzMiwiZXhwIjoxNzA4OTc1OTMyfQ.8RDzBdCaIOrtkYdjfCrHlWAvn7nB_gPmwVcYbA6btK4
+
+### Query reservations
+
+GET http://localhost:4000/api/reservation/query?tipoFiltro=numeroHabitacion&valor=0103&fechaInicio=2020-10-01&fechaFin=2021-10-10 HTTP/1.1
+
+### Query all reservations
+
+GET http://localhost:4000/api/reservation/query?tipoFiltro=numeroHabitacion&valor=all&fechaInicio=2020-10-01&fechaFin=2021-10-10 HTTP/1.1
+
+
+### Query phone number
+
+GET http://localhost:4000/api/reservation/query?tipoFiltro=telefonoReserva&valor=999999999&fechaInicio=2020-10-01&fechaFin=2021-10-10 HTTP/1.1

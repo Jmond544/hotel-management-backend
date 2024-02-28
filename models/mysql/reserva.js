@@ -153,13 +153,38 @@ export class ReservationModel {
     }
   }
 
+  static async queryReserva({ tipoFiltro, valor, fechaInicio, fechaFin }) {
+    let result;
+    console.log(tipoFiltro, valor, fechaInicio, fechaFin);
+
+    if (valor === "all") {
+      result = await poll.query(
+        "SELECT BIN_TO_UUID(R.id) AS id, R.fecha_inicio AS fecha_inicio, R.fecha_fin AS fecha_fin, R.monto_pago AS monto_pago, R.telefono_pago AS telefono_pago, H.numero_habitacion AS numero_habitacion, EP.estado AS estado_pago FROM RESERVA AS R INNER JOIN RESERVA_HABITACION AS RH ON R.id = RH.id_reserva INNER JOIN HABITACION AS H ON RH.id_habitacion = H.id INNER JOIN ESTADO_PAGO AS EP ON R.id_estado_pago = EP.id WHERE R.fecha_inicio >= (?) AND R.fecha_fin <= (?)",
+        [fechaInicio, fechaFin]
+      );
+      return result[0];
+    }
+
+    if (tipoFiltro === "numeroHabitacion") {
+      result = await poll.query(
+        "SELECT BIN_TO_UUID(R.id) AS id, R.fecha_inicio AS fecha_inicio, R.fecha_fin AS fecha_fin, R.monto_pago AS monto_pago, R.telefono_pago AS telefono_pago, H.numero_habitacion AS numero_habitacion, EP.estado AS estado_pago FROM RESERVA AS R INNER JOIN RESERVA_HABITACION AS RH ON R.id = RH.id_reserva INNER JOIN HABITACION AS H ON RH.id_habitacion = H.id INNER JOIN ESTADO_PAGO AS EP ON R.id_estado_pago = EP.id WHERE R.fecha_inicio >= (?) AND R.fecha_fin <= (?) AND H.numero_habitacion = (?)",
+        [fechaInicio, fechaFin, valor]
+      );
+    } else if (tipoFiltro === "telefonoReserva") {
+      result = await poll.query(
+        "SELECT BIN_TO_UUID(R.id) AS id, R.fecha_inicio AS fecha_inicio, R.fecha_fin AS fecha_fin, R.monto_pago AS monto_pago, R.telefono_pago AS telefono_pago, H.numero_habitacion AS numero_habitacion, EP.estado AS estado_pago FROM RESERVA AS R INNER JOIN RESERVA_HABITACION AS RH ON R.id = RH.id_reserva INNER JOIN HABITACION AS H ON RH.id_habitacion = H.id INNER JOIN ESTADO_PAGO AS EP ON R.id_estado_pago = EP.id WHERE R.fecha_inicio >= (?) AND R.fecha_fin <= (?) AND R.telefono_pago = (?)",
+        [fechaInicio, fechaFin, valor]
+      );
+    }
+    return result[0];
+  }
+
   static async calcularMontoPago({
     fechaInicio,
     fechaFin,
     tipoServicio,
     listaHabitaciones,
   }) {
-
     const daysReservation =
       Math.abs(fechaInicio - fechaFin) / (1000 * 60 * 60 * 24);
     const listaNumeroHabitaciones = listaHabitaciones.map(
