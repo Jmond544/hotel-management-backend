@@ -11,6 +11,23 @@ Content-Type: application/json
     "password": "recep123",
     "url_imagen": "https://www.github.com/Jmond544.png"
 }
+
+### Another user
+
+POST https://hotel-management-backend-t1n3.onrender.com/api/user/register HTTP/1.1
+Content-Type: application/json
+
+{
+    "rol": "recepcionista",
+    "nombres": "Jorge",
+    "apellidos": "Sanchez",
+    "dni": "87654321",
+    "telefono": "999999999",
+    "mail": "jorgeesanchez97@gmail.com",
+    "password": "recep123",
+    "url_imagen": "https://www.github.com/Torvalds.png"
+}
+
 ### Login
 
 POST https://hotel-management-backend-t1n3.onrender.com/api/user/login HTTP/1.1
