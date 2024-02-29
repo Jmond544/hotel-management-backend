@@ -11,5 +11,4 @@ reservationRouter.get("/:id", ReservationController.getOne);
 
 reservationRouter.post("/", ReservationController.create);
 
-// No se le deben de pasar los parámetros en el body, sino en la query string
-// /query?tipoFiltro=numeroHabitacion&valor=1&fechaInicio=2021-10-01&fechaFin=2021-10-10
+reservationRouter.delete("/:id", ReservationController.delete);

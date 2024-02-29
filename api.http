@@ -34,40 +34,40 @@ Content-Type: application/json
 
 {
     "tipoServicio": "basico",
-    "fechaInicio": "2020-12-15",
-    "fechaFin": "2020-12-20",
-    "mailPago": "example@example.com",
-    "telefonoPago": "999999999",
+    "fechaInicio": "2024-01-15",
+    "fechaFin": "2024-01-20",
+    "mailPago": "jmondalgotapia@gmail.com",
+    "telefonoPago": "953923333",
     "habitaciones": [
         {
-            "numero": "0201"
+            "numero": "0101"
         },
         {
-            "numero": "0202"
+            "numero": "0102"
         },
         {
-            "numero": "0103"
+            "numero": "0203"
         }
     ],
     "huespedes": [
         {
             "nombre": "Juan",
-            "apellido": "Perez",
-            "dni": "12345678",
+            "apellido": "Gabriel",
+            "dni": "45347612",
             "telefono": "999999999",
             "mail": "a@gmail.com"
         },
         {
-            "nombre": "Juan",
-            "apellido": "Perez",
-            "dni": "23409823",
+            "nombre": "Jesús",
+            "apellido": "Mitma",
+            "dni": "78456712",
             "telefono": "999999999",
             "mail": "b@gmail.com"
         },
         {
-            "nombre": "Juan",
-            "apellido": "Perez",
-            "dni": "12309834",
+            "nombre": "Kevin",
+            "apellido": "Pineda",
+            "dni": "18450312",
             "telefono": "999999999",
             "mail": "c@gmail.com"
         }
@@ -168,9 +168,17 @@ GET http://localhost:4000/api/reservation/query?tipoFiltro=numeroHabitacion&valo
 
 ### Query all reservations
 
-GET http://localhost:4000/api/reservation/query?tipoFiltro=numeroHabitacion&valor=all&fechaInicio=2020-10-01&fechaFin=2021-10-10 HTTP/1.1
+GET http://localhost:4000/api/reservation/query?tipoFiltro=numeroHabitacion&valor=all&fechaInicio=2020-10-01&fechaFin=2024-10-10 HTTP/1.1
 
 
 ### Query phone number
 
 GET http://localhost:4000/api/reservation/query?tipoFiltro=telefonoReserva&valor=999999999&fechaInicio=2020-10-01&fechaFin=2021-10-10 HTTP/1.1
+
+### Delete reservation
+
+DELETE http://localhost:4000/api/reservation/4e6438c6-d675-11ee-952f-8c16450196f9 HTTP/1.1
+
+### Get one
+
+GET http://localhost:4000/api/reservation/8efc331c-d6a9-11ee-952f-8c16450196f9 HTTP/1.1

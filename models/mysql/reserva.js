@@ -9,7 +9,9 @@ import { ModeloReservaHuesped } from "./reserva_huesped.js";
 export class ReservationModel {
   static async getAll() {
     try {
-      const result = await poll.query("SELECT * FROM RESERVA");
+      const result = await poll.query(
+        "SELECT BIN_TO_UUID(r.id) AS id_reserva, s.nombre AS tipo_servicio, ep.estado AS estado_pago, r.fecha_inicio, r.fecha_fin, r.numero_huespedes, r.monto_pago, r.mail_pago, r.telefono_pago, GROUP_CONCAT(DISTINCT h.numero_habitacion ORDER BY h.numero_habitacion SEPARATOR ', ') AS habitaciones, GROUP_CONCAT(DISTINCT CONCAT(hu.nombres, ' ', hu.apellidos) ORDER BY hu.apellidos, hu.nombres SEPARATOR ', ') AS huespedes FROM RESERVA r LEFT JOIN TIPO_SERVICIO s ON r.id_tipo_servicio = s.id LEFT JOIN ESTADO_PAGO ep ON r.id_estado_pago = ep.id LEFT JOIN RESERVA_HABITACION rh ON r.id = rh.id_reserva LEFT JOIN HABITACION h ON rh.id_habitacion = h.id LEFT JOIN RESERVA_HUESPED rhp ON r.id = rhp.id_reserva LEFT JOIN HUESPED hu ON rhp.id_huesped = hu.id GROUP BY r.id"
+      );
       return result[0];
     } catch (error) {
       console.log(error);
@@ -19,7 +21,7 @@ export class ReservationModel {
   static async getById({ id }) {
     try {
       const result = await poll.query(
-        "SELECT * FROM RESERVA WHERE id = UUID_TO_BIN(?)",
+        "SELECT BIN_TO_UUID(r.id) AS id_reserva, s.nombre AS tipo_servicio, ep.estado AS estado_pago, r.fecha_inicio, r.fecha_fin, r.numero_huespedes, r.monto_pago, r.mail_pago, r.telefono_pago, GROUP_CONCAT(DISTINCT h.numero_habitacion ORDER BY h.numero_habitacion SEPARATOR ', ') AS habitaciones, GROUP_CONCAT(DISTINCT CONCAT(hu.nombres, ' ', hu.apellidos) ORDER BY hu.apellidos, hu.nombres SEPARATOR ', ') AS huespedes FROM RESERVA r LEFT JOIN TIPO_SERVICIO s ON r.id_tipo_servicio = s.id LEFT JOIN ESTADO_PAGO ep ON r.id_estado_pago = ep.id LEFT JOIN RESERVA_HABITACION rh ON r.id = rh.id_reserva LEFT JOIN HABITACION h ON rh.id_habitacion = h.id LEFT JOIN RESERVA_HUESPED rhp ON r.id = rhp.id_reserva LEFT JOIN HUESPED hu ON rhp.id_huesped = hu.id WHERE r.id = UUID_TO_BIN(?)",
         [id]
       );
       return result[0];
@@ -153,9 +155,38 @@ export class ReservationModel {
     }
   }
 
+  static async delete({ id }) {
+    const resultReservaHabitacion = await poll.query(
+      "DELETE FROM RESERVA_HABITACION WHERE id_reserva = UUID_TO_BIN(?)",
+      [id]
+    );
+    const resultReservaHuesped = await poll.query(
+      "DELETE FROM RESERVA_HUESPED WHERE id_reserva = UUID_TO_BIN(?)",
+      [id]
+    );
+    const resultReserva = await poll.query(
+      "DELETE FROM RESERVA WHERE id = UUID_TO_BIN(?)",
+      [id]
+    );
+    if (
+      resultReserva[0].affectedRows > 0 &&
+      resultReservaHabitacion[0].affectedRows > 0 &&
+      resultReservaHuesped[0].affectedRows > 0
+    ) {
+      return {
+        result: resultReserva[0],
+        message: "Se ha eliminado la reserva.",
+      };
+    }
+
+    return {
+      result: null,
+      message: "No se ha eliminado la reserva.",
+    };
+  }
+
   static async queryReserva({ tipoFiltro, valor, fechaInicio, fechaFin }) {
     let result;
-    console.log(tipoFiltro, valor, fechaInicio, fechaFin);
 
     if (valor === "all") {
       result = await poll.query(
@@ -205,18 +236,6 @@ export class ReservationModel {
       const result = await poll.query(
         "UPDATE RESERVA SET ? WHERE id = UUID_TO_BIN(?)",
         [data, id]
-      );
-      return result[0];
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  static async delete({ id }) {
-    try {
-      const result = await poll.query(
-        "DELETE FROM RESERVA WHERE id = UUID_TO_BIN(?)",
-        [id]
       );
       return result[0];
     } catch (error) {

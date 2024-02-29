@@ -85,6 +85,21 @@ export class ReservationController {
     }
   }
 
+  static async delete(req, res) {
+    try {
+      const { id } = req.params;
+      console.log(id);
+      const result = await ReservationModel.delete({ id });
+      if (!result.result) {
+        res.status(400).json({ message: result.message });
+      } else {
+        res.status(200).json({ message: "Reservation deleted" });
+      }
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+
   static async queryReserva(req, res) {
     try {
       const { tipoFiltro, valor, fechaInicio, fechaFin } = req.query;
