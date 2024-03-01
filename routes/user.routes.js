@@ -8,3 +8,7 @@ userRouter.post("/login", UserController.login);
 userRouter.post("/register", UserController.register);
 userRouter.post("/verify", UserController.verifyCode);
 userRouter.get("/profile", verifyToken, UserController.profile);
+
+userRouter.post("/send-email", verifyToken, UserController.sendCode);
+
+userRouter.put("/change-password", verifyToken, UserController.changePassword);

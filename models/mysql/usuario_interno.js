@@ -57,4 +57,9 @@ export class ModeloUsuarioInterno {
     );
     return resultado[0];
   }
+
+  static async actualizarPassword ({id, password}) {
+    const resultado = await poll.query("UPDATE USUARIO_INTERNO SET password = ? WHERE id = UUID_TO_BIN(?)", [password, id]);
+    return resultado[0];
+  }
 }

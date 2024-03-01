@@ -6,6 +6,15 @@ POST http://localhost:4000/api/room/0102 HTTP/1.1
 Content-Type: application/json
 
 {
+    "estado": "disponible"
+}
+
+### Actualizar el estado de una habitación
+
+POST http://localhost:4000/api/room/0102 HTTP/1.1
+Content-Type: application/json
+
+{
     "estado": "ocupada"
 }
 
@@ -34,40 +43,40 @@ Content-Type: application/json
 
 {
     "tipoServicio": "basico",
-    "fechaInicio": "2020-12-15",
-    "fechaFin": "2020-12-20",
-    "mailPago": "example@example.com",
-    "telefonoPago": "999999999",
+    "fechaInicio": "2024-02-15",
+    "fechaFin": "2024-02-20",
+    "mailPago": "jmondalgotapia@gmail.com",
+    "telefonoPago": "953923333",
     "habitaciones": [
         {
-            "numero": "0201"
+            "numero": "0101"
         },
         {
-            "numero": "0202"
+            "numero": "0102"
         },
         {
-            "numero": "0103"
+            "numero": "0203"
         }
     ],
     "huespedes": [
         {
             "nombre": "Juan",
-            "apellido": "Perez",
-            "dni": "12345678",
+            "apellido": "Gabriel",
+            "dni": "45347612",
             "telefono": "999999999",
             "mail": "a@gmail.com"
         },
         {
-            "nombre": "Juan",
-            "apellido": "Perez",
-            "dni": "23409823",
+            "nombre": "Jesús",
+            "apellido": "Mitma",
+            "dni": "78456712",
             "telefono": "999999999",
             "mail": "b@gmail.com"
         },
         {
-            "nombre": "Juan",
-            "apellido": "Perez",
-            "dni": "12309834",
+            "nombre": "Kevin",
+            "apellido": "Pineda",
+            "dni": "18450312",
             "telefono": "999999999",
             "mail": "c@gmail.com"
         }
@@ -80,6 +89,7 @@ POST http://localhost:4000/api/payment/create-order HTTP/1.1
 Content-Type: application/json
 
 {
+  "currentUrl": "http://localhost:3000",
   "mailPago": "jmondalgotapia@gmail.com",
   "telefonoPago": "953923333",
   "tipoServicio": "basico",
@@ -110,8 +120,8 @@ Content-Type: application/json
 
 {
     "rol": "recepcionista",
-    "nombres": "Jhon",
-    "apellidos": "Doe",
+    "nombres": "Juan Carlos",
+    "apellidos": "Mondalgo Tapia",
     "dni": "12345678",
     "telefono": "999999999",
     "mail": "jmondalgotapia@gmail.com",
@@ -160,3 +170,76 @@ Content-Type: application/json
 
 GET http://localhost:4000/api/user/profile/ HTTP/1.1
 X-Access-Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjUyNjdhZTliLWQ0MTQtMTFlZS04ODA3LThjMTY0NTAxOTZmOSIsImlhdCI6MTcwODg4OTUzMiwiZXhwIjoxNzA4OTc1OTMyfQ.8RDzBdCaIOrtkYdjfCrHlWAvn7nB_gPmwVcYbA6btK4
+
+### Query reservations
+
+GET http://localhost:4000/api/reservation/query?tipoFiltro=numeroHabitacion&valor=0103&fechaInicio=2020-10-01&fechaFin=2021-10-10 HTTP/1.1
+
+### Query all reservations
+
+GET http://localhost:4000/api/reservation/query?tipoFiltro=numeroHabitacion&valor=all&fechaInicio=2020-10-01&fechaFin=2024-10-10 HTTP/1.1
+
+
+### Query phone number
+
+GET http://localhost:4000/api/reservation/query?tipoFiltro=telefonoReserva&valor=999999999&fechaInicio=2020-10-01&fechaFin=2021-10-10 HTTP/1.1
+
+### Delete reservation
+
+DELETE http://localhost:4000/api/reservation/4e6438c6-d675-11ee-952f-8c16450196f9 HTTP/1.1
+
+### Get one
+
+GET http://localhost:4000/api/reservation/d3ff450d-d732-11ee-b462-8c16450196f9 HTTP/1.1
+
+### Update status payment reservation
+
+PUT http://localhost:4000/api/reservation/4ae3f895-d6c5-11ee-952f-8c16450196f9 HTTP/1.1
+Content-Type: application/json
+
+{
+    "status": "pagado"
+}
+
+### Update reservation
+PUT http://localhost:4000/api/reservation/update/cc92beda-d78e-11ee-b462-8c16450196f9 HTTP/1.1
+Content-Type: application/json
+
+{
+    "tipoServicio": "basico",
+    "fechaInicio": "2024-01-15",
+    "fechaFin": "2024-01-20",
+    "mailPago": "jmondalgotapia@gmail.com",
+    "telefonoPago": "953923332",
+    "habitaciones": [
+        {
+            "numero": "0201"
+        },
+        {
+            "numero": "0202"
+        },
+        {
+            "numero": "0203"
+        }
+    ]
+}
+
+### Send mail
+
+POST http://localhost:4000/api/user/send-email HTTP/1.1
+X-Access-Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImJhNzY4YTE4LWQ3OGUtMTFlZS1iNDYyLThjMTY0NTAxOTZmOSIsImlhdCI6MTcwOTI3MTk2MiwiZXhwIjoxNzA5MzU4MzYyfQ.s5DZsai_1OIBhE1PDZXhRX5HvloSxV3uFaKBbTmlW7E
+Content-Type: application/json
+
+{
+    "mail": "jmondalgotapia@gmail.com"
+}
+
+### Change password
+
+PUT http://localhost:4000/api/user/change-password HTTP/1.1
+X-Access-Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImJhNzY4YTE4LWQ3OGUtMTFlZS1iNDYyLThjMTY0NTAxOTZmOSIsImlhdCI6MTcwOTI3MTk2MiwiZXhwIjoxNzA5MzU4MzYyfQ.s5DZsai_1OIBhE1PDZXhRX5HvloSxV3uFaKBbTmlW7E
+Content-Type: application/json
+
+{
+    "password": "recep1234"
+}

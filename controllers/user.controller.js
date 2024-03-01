@@ -146,4 +146,76 @@ export class UserController {
       res.status(500).json({ error: error.message });
     }
   }
+
+  static async sendCode(req, res) {
+    try {
+      const { mail } = req.body;
+      if (!mail) {
+        return res.status(400).json({ error: "Faltan datos" });
+      }
+      const idUser = req.userId;
+      const token = cryptoRandomString({ length: 6, type: "distinguishable" });
+
+      const fecha_creacion_codigo = new Date();
+
+      const updateState = await ModeloUsuarioInterno.actualizarCodigoTemporal({
+        mail,
+        codigo_temporal: token,
+        fecha_creacion_codigo,
+      });
+
+      if (updateState.affectedRows === 0) {
+        return res
+          .status(500)
+          .json({ error: "No se pudo actualizar el código" });
+      }
+
+      const { data, error } = await resend.emails.send({
+        from: "Dolphin Hotel <recepcion@resend.dev>",
+        to: [mail],
+        subject: "Código de verificación",
+        html: `<strong>Tu código de verificación para el cambio de contraseña es: ${token}</strong>`,
+      });
+      if (error) {
+        return res.status(400).json({ error });
+      }
+
+      res.status(200).json({
+        message: "Se ha enviado un código de verificación a tu correo",
+      });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+
+  static async changePassword(req, res) {
+    try {
+      const { password } = req.body;
+      if (!password) {
+        return res.status(400).json({ error: "Faltan datos" });
+      }
+      const userId = req.userId;
+
+      if (!userId) {
+        return res.status(404).json({ error: "Usuario no encontrado" });
+      }
+
+      const password_cifrado = md5(password);
+
+      const updateState = await ModeloUsuarioInterno.actualizarPassword({
+        id: userId,
+        password: password_cifrado,
+      });
+
+      if (updateState.affectedRows === 0) {
+        return res
+          .status(500)
+          .json({ error: "No se pudo actualizar la contraseña" });
+      }
+
+      res.status(200).json({ message: "Contraseña actualizada" });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
 }
