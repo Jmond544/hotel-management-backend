@@ -43,8 +43,8 @@ Content-Type: application/json
 
 {
     "tipoServicio": "basico",
-    "fechaInicio": "2024-01-15",
-    "fechaFin": "2024-01-20",
+    "fechaInicio": "2024-02-15",
+    "fechaFin": "2024-02-20",
     "mailPago": "jmondalgotapia@gmail.com",
     "telefonoPago": "953923333",
     "habitaciones": [

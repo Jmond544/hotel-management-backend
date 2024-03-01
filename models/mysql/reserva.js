@@ -149,6 +149,7 @@ export class ReservationModel {
       return {
         result: result[0],
         message: "Se ha registrado la reserva.",
+        id: idReserva[0][0].id,
       };
     } catch (error) {
       console.log(error);

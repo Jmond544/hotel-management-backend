@@ -2,6 +2,10 @@ import { ReservationModel } from "../models/mysql/reserva.js";
 import { ModeloReservaHabitacion } from "../models/mysql/reserva_habitacion.js";
 import { ModeloHabitacion } from "../models/mysql/habitacion.js";
 import { validateReservation } from "../schemas/reserva.js";
+import { RESEND_API_SECRET } from "../config.js";
+import { Resend } from "resend";
+
+const resend = new Resend(RESEND_API_SECRET);
 
 export class ReservationController {
   static async getAll(req, res) {
@@ -78,6 +82,15 @@ export class ReservationController {
       if (!resultCreate.result) {
         res.status(400).json({ message: resultCreate.message });
       } else {
+        const { data, error } = await resend.emails.send({
+          from: "Dolphin Hotel <recepcion@resend.dev>",
+          to: [mailPago],
+          subject: "Código de verificación",
+          html: `<strong>El código de su habitación es: ${resultCreate.id}</strong>`,
+        });
+        if (error) {
+          return res.status(400).json({ error });
+        }
         res.status(200).json({ message: "Reservation created" });
       }
     } catch (error) {
