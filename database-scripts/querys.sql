@@ -46,3 +46,33 @@ LEFT JOIN HABITACION h ON rh.id_habitacion = h.id
 LEFT JOIN RESERVA_HUESPED rhp ON r.id = rhp.id_reserva
 LEFT JOIN HUESPED hu ON rhp.id_huesped = hu.id
 WHERE r.id = UUID_TO_BIN('d8851b64-d6c1-11ee-952f-8c16450196f9');
+
+-- Update de una reserva
+
+UPDATE RESERVA
+SET
+    id_tipo_servicio = (SELECT id FROM TIPO_SERVICIO WHERE nombre = 'nuevo_nombre_tipo_servicio'),
+    id_estado_pago = (SELECT id FROM ESTADO_PAGO WHERE estado = 'nuevo_estado_pago'),
+    fecha_inicio = 'nueva_fecha_inicio',
+    fecha_fin = 'nueva_fecha_fin',
+    numero_huespedes = nuevo_numero_huespedes,
+    monto_pago = nuevo_monto_pago,
+    mail_pago = 'nuevo_mail_pago',
+    telefono_pago = 'nuevo_telefono_pago'
+WHERE
+    id = UUID_TO_BIN('id_de_la_reserva_a_actualizar');
+
+
+-- Update rooms
+
+-- Primero, elimina las antiguas habitaciones asociadas a la reserva
+DELETE FROM RESERVA_HABITACION
+WHERE id_reserva = 'id_de_la_reserva_a_actualizar';
+
+-- Luego, inserta las nuevas asociaciones de habitaciones para la reserva
+INSERT INTO RESERVA_HABITACION (id_reserva, id_habitacion)
+VALUES
+    ('id_de_la_reserva_a_actualizar', 'id_nueva_habitacion_1'),
+    ('id_de_la_reserva_a_actualizar', 'id_nueva_habitacion_2'),
+    ('id_de_la_reserva_a_actualizar', 'id_nueva_habitacion_3');
+-- Agrega más filas según sea necesario para las nuevas habitaciones asociadas

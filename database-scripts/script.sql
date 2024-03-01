@@ -124,7 +124,7 @@ INSERT INTO HABITACION (numero_habitacion, tipo_habitacion, numero_piso, precio,
 
 INSERT INTO HABITACION (numero_habitacion, tipo_habitacion, numero_piso, precio, estado) VALUES ("0201","clasico", 2, 300, 'disponible');
 INSERT INTO HABITACION (numero_habitacion, tipo_habitacion, numero_piso, precio, estado) VALUES ("0202","matrimonial", 2, 400, 'disponible');
-INSERT INTO HABITACION (numero_habitacion, tipo_habitacion, numero_piso, precio, estado) VALUES ("0203","Suit", 2, 500, 'disponible');
+INSERT INTO HABITACION (numero_habitacion, tipo_habitacion, numero_piso, precio, estado) VALUES ("0203","suit", 2, 500, 'disponible');
 
 -- Piso 3
 INSERT INTO HABITACION (numero_habitacion, tipo_habitacion, numero_piso, precio, estado) VALUES ("0301","clasico", 3, 300, 'disponible');

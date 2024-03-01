@@ -12,3 +12,7 @@ reservationRouter.get("/:id", ReservationController.getOne);
 reservationRouter.post("/", ReservationController.create);
 
 reservationRouter.delete("/:id", ReservationController.delete);
+
+reservationRouter.put("/:id", ReservationController.updatePaymentStatus);
+
+reservationRouter.put("/update/:id", ReservationController.updateReservation);

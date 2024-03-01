@@ -21,7 +21,7 @@ export class ReservationModel {
   static async getById({ id }) {
     try {
       const result = await poll.query(
-        "SELECT BIN_TO_UUID(r.id) AS id_reserva, s.nombre AS tipo_servicio, ep.estado AS estado_pago, r.fecha_inicio, r.fecha_fin, r.numero_huespedes, r.monto_pago, r.mail_pago, r.telefono_pago, GROUP_CONCAT(DISTINCT h.numero_habitacion ORDER BY h.numero_habitacion SEPARATOR ', ') AS habitaciones, GROUP_CONCAT(DISTINCT CONCAT(hu.nombres, ' ', hu.apellidos) ORDER BY hu.apellidos, hu.nombres SEPARATOR ', ') AS huespedes FROM RESERVA r LEFT JOIN TIPO_SERVICIO s ON r.id_tipo_servicio = s.id LEFT JOIN ESTADO_PAGO ep ON r.id_estado_pago = ep.id LEFT JOIN RESERVA_HABITACION rh ON r.id = rh.id_reserva LEFT JOIN HABITACION h ON rh.id_habitacion = h.id LEFT JOIN RESERVA_HUESPED rhp ON r.id = rhp.id_reserva LEFT JOIN HUESPED hu ON rhp.id_huesped = hu.id WHERE r.id = UUID_TO_BIN(?)",
+        "SELECT BIN_TO_UUID(r.id) AS id_reserva, s.nombre AS tipo_servicio, s.precio AS precio_tipo_servicio, ep.estado AS estado_pago, r.fecha_inicio, r.fecha_fin, r.numero_huespedes, r.monto_pago, r.mail_pago, r.telefono_pago, GROUP_CONCAT(DISTINCT h.numero_habitacion ORDER BY h.numero_habitacion SEPARATOR ', ') AS habitaciones, GROUP_CONCAT(DISTINCT CONCAT(hu.nombres, ' ', hu.apellidos) ORDER BY hu.apellidos, hu.nombres SEPARATOR ', ') AS huespedes FROM RESERVA r LEFT JOIN TIPO_SERVICIO s ON r.id_tipo_servicio = s.id LEFT JOIN ESTADO_PAGO ep ON r.id_estado_pago = ep.id LEFT JOIN RESERVA_HABITACION rh ON r.id = rh.id_reserva LEFT JOIN HABITACION h ON rh.id_habitacion = h.id LEFT JOIN RESERVA_HUESPED rhp ON r.id = rhp.id_reserva LEFT JOIN HUESPED hu ON rhp.id_huesped = hu.id WHERE r.id = UUID_TO_BIN(?)",
         [id]
       );
       return result[0];
@@ -210,6 +210,23 @@ export class ReservationModel {
     return result[0];
   }
 
+  static async updatePaymentStatus({ id, status }) {
+    const result = await poll.query(
+      "UPDATE RESERVA SET id_estado_pago = (SELECT id FROM ESTADO_PAGO WHERE estado = ?) WHERE id = UUID_TO_BIN(?)",
+      [status, id]
+    );
+    if (result[0].affectedRows > 0) {
+      return {
+        result: result[0],
+        message: "Se ha actualizado el estado de pago.",
+      };
+    }
+    return {
+      result: null,
+      message: "No se ha actualizado el estado de pago.",
+    };
+  }
+
   static async calcularMontoPago({
     fechaInicio,
     fechaFin,
@@ -231,12 +248,33 @@ export class ReservationModel {
     return daysReservation * (costoHabitaciones + costoServicio);
   }
 
-  static async update({ data, id }) {
+  static async update({
+    id,
+    tipoServicio,
+    fechaInicio,
+    fechaFin,
+    mailPago,
+    telefonoPago,
+    habitaciones,
+    huespedes,
+    montoPago,
+  }) {
     try {
+      let status = true;
       const result = await poll.query(
-        "UPDATE RESERVA SET ? WHERE id = UUID_TO_BIN(?)",
-        [data, id]
+        "UPDATE RESERVA SET id_tipo_servicio = (SELECT id FROM TIPO_SERVICIO WHERE nombre = (?) ), fecha_inicio = (?), fecha_fin = (?), numero_huespedes = (?), monto_pago = (?), mail_pago = (?), telefono_pago = (?) WHERE id = UUID_TO_BIN(?)",
+        [
+          tipoServicio,
+          fechaInicio,
+          fechaFin,
+          habitaciones.length,
+          montoPago,
+          mailPago,
+          telefonoPago,
+          id,
+        ]
       );
+
       return result[0];
     } catch (error) {
       console.log(error);

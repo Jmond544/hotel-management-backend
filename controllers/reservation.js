@@ -1,5 +1,6 @@
 import { ReservationModel } from "../models/mysql/reserva.js";
 import { ModeloReservaHabitacion } from "../models/mysql/reserva_habitacion.js";
+import { ModeloHabitacion } from "../models/mysql/habitacion.js";
 import { validateReservation } from "../schemas/reserva.js";
 
 export class ReservationController {
@@ -158,5 +159,109 @@ export class ReservationController {
       listaHabitaciones,
     });
     return response;
+  }
+
+  static async updatePaymentStatus(req, res) {
+    try {
+      const { id } = req.params;
+      const { status } = req.body;
+      if (!status) {
+        res.status(400).json({ message: "Invalid fields" });
+        return;
+      }
+      const result = await ReservationModel.updatePaymentStatus({ id, status });
+      if (!result.result) {
+        res.status(400).json({ message: result.message });
+      } else {
+        res.status(200).json({ message: "Payment status updated" });
+      }
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+
+  static async updateReservation(req, res) {
+    try {
+      const { id } = req.params;
+      const {
+        tipoServicio,
+        fechaInicio,
+        fechaFin,
+        mailPago,
+        telefonoPago,
+        habitaciones,
+      } = req.body;
+
+      if (
+        !tipoServicio ||
+        !fechaInicio ||
+        !fechaFin ||
+        !mailPago ||
+        !telefonoPago ||
+        habitaciones.length <= 0
+      ) {
+        res.status(400).json({ message: "Invalid fields" });
+        return;
+      }
+
+      const monto_pago = await ReservationController.obtenerPrecio({
+        fechaInicio,
+        fechaFin,
+        tipoServicio,
+        listaHabitaciones: habitaciones,
+      });
+
+      const resultCreate = await ReservationModel.update({
+        id,
+        tipoServicio,
+        fechaInicio,
+        fechaFin,
+        mailPago,
+        telefonoPago,
+        habitaciones,
+        montoPago: monto_pago,
+      });
+
+      if (!resultCreate) {
+        res.status(400).json({ message: resultCreate.message });
+      } 
+      if (resultCreate.affectedRows === 0) {
+        res.status(400).json({ message: "Reservation not found" });
+      } else if (resultCreate.affectedRows !== 1) {
+        res.status(400).json({ message: "Error" });
+      }
+
+      let status = true;
+      const deletedHabitaciones =
+        await ModeloReservaHabitacion.deleteByIdReserva({
+          idReserva: id,
+        });
+        status = status && deletedHabitaciones.affectedRows > 0;
+      if (deletedHabitaciones.affectedRows > 0) {
+        for (let i = 0; i < habitaciones.length; i++) {
+          const idHabitacion =
+            await ModeloHabitacion.obtenerIdPorNumeroHabitacion({
+              numeroHabitacion: habitaciones[i].numero,
+            });
+          const result_habitacion_reserva =
+            await ModeloReservaHabitacion.crearRelacion({
+              idReserva: id,
+              idHabitacion,
+            });
+          status = result_habitacion_reserva.affectedRows > 0 && status;
+        }
+      } else {
+        status = false;
+      }
+      if (status) {
+        res.status(200).json({ message: "Reservation updated" });
+      } else {
+        res.status(400).json({ message: "Error" });
+      }
+
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ error: error.message });
+    }
   }
 }

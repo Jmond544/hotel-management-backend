@@ -13,19 +13,18 @@ export class ModeloReservaHabitacion {
       console.log(error);
     }
   }
-  /*
-static async obtenerPrecioTotalHabitaciones({ idReserva }) {
-  try {
-    const resultado = await poll.query(
-      "SELECT SUM(precio) AS precio_total FROM HABITACION WHERE id IN (SELECT id_habitacion FROM RESERVA_HABITACION WHERE id_reserva = UUID_TO_BIN(?))",
-      [idReserva]
+  
+  static async deleteByIdReserva ({idReserva}) {
+    try {
+      const resultado = await poll.query(
+        "DELETE FROM RESERVA_HABITACION WHERE id_reserva = UUID_TO_BIN(?)",
+        [idReserva]
       );
-      return resultado[0].precio_total;
+      return resultado[0];
     } catch (error) {
       console.log(error);
     }
   }
-  */
 
   static async validarFechas({ listaHabitaciones, fechaInicio, fechaFin }) {
     try {
